@@ -121,7 +121,7 @@ unsigned int getDistance()
     // duration that it takes to get back
     digitalWrite(TRIG, LOW);
     duration = pulseIn(ECHO, HIGH);
-    
+
     // returning the distance in cm
     return duration / 29 / 2;
 }
