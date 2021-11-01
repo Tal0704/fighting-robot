@@ -10,6 +10,8 @@
 
 #define SERVO_1 0
 
+// TODO: fix servo angle
+
 class MotorDC
 {
 private:
@@ -21,7 +23,7 @@ public:
     MotorDC(unsigned int pin1, unsigned int pin2, unsigned int enable)
         : m_pin1(pin1), m_pin2(pin2), m_enable(enable)
     {
-        pinMode(this->m_enable, OUTPUT);
+        pinMode(this->m_enable, INPUT);
         pinMode(this->m_pin1, OUTPUT);
         pinMode(this->m_pin2, OUTPUT);
 
@@ -38,6 +40,11 @@ public:
     void enable()
     {
         digitalWrite(this->m_enable, HIGH);
+    }
+
+    void disable()
+    {
+        digitalWrite(this->m_enable, LOW);
     }
 
     void move(Directions dir)
@@ -114,6 +121,7 @@ unsigned int getDistance()
     // duration that it takes to get back
     digitalWrite(TRIG, LOW);
     duration = pulseIn(ECHO, HIGH);
+    
     // returning the distance in cm
     return duration / 29 / 2;
 }
@@ -131,7 +139,7 @@ Servo myServo;
 
 void setup()
 {
-
+    
 }
 
 void loop()
