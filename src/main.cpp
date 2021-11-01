@@ -1,14 +1,7 @@
 #include <ESP32Servo.h>
 
-#define BUZZER_PIN 0
+#include "pins.h"
 
-#define TRIG 0
-#define ECHO 0
-
-#define LASER_RECIVE 0
-#define LASER_EMIT 0
-
-#define SERVO_1 0
 
 // TODO: fix servo angle
 
