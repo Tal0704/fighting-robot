@@ -1,66 +1,8 @@
 #include <ESP32Servo.h>
-
 #include "pins.h"
-
+#include "classes/MotorDC.h"
 
 // TODO: fix servo angle
-
-class MotorDC
-{
-private:
-    unsigned int m_pin1;
-    unsigned int m_pin2;
-    unsigned int m_enable;
-
-public:
-    MotorDC(unsigned int pin1, unsigned int pin2, unsigned int enable)
-        : m_pin1(pin1), m_pin2(pin2), m_enable(enable)
-    {
-        pinMode(this->m_enable, INPUT);
-        pinMode(this->m_pin1, OUTPUT);
-        pinMode(this->m_pin2, OUTPUT);
-
-        this->enable();
-    }
-
-    enum class Directions
-    {
-        Backwords = 1,
-        Stop,
-        Forward
-    };
-
-    void enable()
-    {
-        digitalWrite(this->m_enable, HIGH);
-    }
-
-    void disable()
-    {
-        digitalWrite(this->m_enable, LOW);
-    }
-
-    void move(Directions dir)
-    {
-        switch (dir)
-        {
-        case Directions::Backwords:
-            digitalWrite(this->m_pin1, HIGH);
-            digitalWrite(this->m_pin2, LOW);
-            break;
-
-        case Directions::Stop:
-            digitalWrite(this->m_pin1, LOW);
-            digitalWrite(this->m_pin2, LOW);
-            break;
-
-        case Directions::Forward:
-            digitalWrite(this->m_pin1, LOW);
-            digitalWrite(this->m_pin2, HIGH);
-            break;
-        }
-    }
-};
 
 // Active low
 namespace laser
@@ -128,7 +70,7 @@ void buzz(unsigned int delay_ms)
     delay(delay_ms);
 }
 
-Servo myServo;
+MotorDC motor(12, 13, 14);
 
 void setup()
 {
