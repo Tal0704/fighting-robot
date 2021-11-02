@@ -3,10 +3,9 @@
 #include "../lib/laser/laser.h"
 #include "../lib/servo/servo.h"
 #include "../lib/miscellaneous.h"
+#include "../lib/joystick/Joystick.h"
 
-// TODO: fix servo angle | fixed!
-
-
+Joystick joy(JOYSTICK1_X, JOYSTICK1_Y, JOYSTICK1_Z);
 
 void setup()
 {
@@ -15,5 +14,5 @@ void setup()
 
 void loop()
 {
-
+    
 }
