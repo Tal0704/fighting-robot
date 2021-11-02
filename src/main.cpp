@@ -5,7 +5,7 @@
 #include "../lib/miscellaneous.h"
 #include "../lib/joystick/Joystick.h"
 
-Joystick joy(JOYSTICK1_X, JOYSTICK1_Y, JOYSTICK1_Z);
+// TODO: check z reading from joystick class
 
 void setup()
 {
