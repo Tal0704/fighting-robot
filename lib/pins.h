@@ -8,6 +8,6 @@
 
 #define SERVO_1 0
 
-#define JOYSTICK1_X 35
-#define JOYSTICK1_Y 32
-#define JOYSTICK1_Z 34
+#define L_STICK_X 35
+#define L_STICK_Y 27
+#define L_STICK_Z 34

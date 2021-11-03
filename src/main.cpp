@@ -5,14 +5,17 @@
 #include "../lib/miscellaneous.h"
 #include "../lib/joystick/Joystick.h"
 
-// TODO: check z reading from joystick class
+Joystick joy(L_STICK_X, L_STICK_Y, L_STICK_Z);
 
 void setup()
 {
-    
+    pinMode(L_STICK_X, INPUT);
+    pinMode(L_STICK_Y, INPUT);
+    Serial.begin(9600);
 }
 
 void loop()
 {
-    
+    Serial.printf("X: %d\t Y: %d\n", joy.getX(), joy.getY());
 }
+
