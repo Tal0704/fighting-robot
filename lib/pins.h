@@ -1,4 +1,4 @@
-#define BUZZER_PIN 0
+#define BUZZER_PIN 25
 
 #define TRIG 0
 #define ECHO 0
