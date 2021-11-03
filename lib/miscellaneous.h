@@ -9,8 +9,4 @@ unsigned int getDistance();
 // Active low
 void buzz(unsigned int delay_ms);
 
-void moveWheels(MotorDC& motor)
-{
-    Joystick lStick(L_STICK_X, L_STICK_Y, L_STICK_Z);
-    
-}
+void moveWheels(MotorDC &motor);
