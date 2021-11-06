@@ -1,3 +1,4 @@
+#include <math.h>
 #include <Arduino.h>
 #include "pins.h"
 #include "miscellaneous.h"
@@ -34,6 +35,26 @@ void buzz(unsigned int delay_ms)
 void moveWheels(MotorDC &motor)
 {
     Joystick lStick(L_STICK_X, L_STICK_Y, L_STICK_Z);
-    float angle = sin(lStick.getY() / lStick.getX()); // edge case for div by zero
-    float amount = sqrt(lStick.getY() * lStick.getY() + lStick.getX() * lStick.getX());
+
+    if (fabs(lStick.getX()) <= 15.0f && fabs(lStick.getY()) <= 15.0f)
+    {
+        motor.move(MotorDC::Directions::Stop);
+        return;
+    }
+    float angle;
+    if (lStick.getX() != 0) // Stopping divding by zero
+        angle = sin(lStick.getY() / lStick.getX());
+    else
+        angle = 0.0f;
+    
+    float amount = sqrt(fabs(lStick.getY() * lStick.getY()) + fabs(lStick.getX() * lStick.getX()));
+
+    if (angle <= 90.0f)
+        motor.move(MotorDC::Directions::Backwords); // Right
+    else if (angle <= 180.0f)
+        motor.move(MotorDC::Directions::Forward); // Forwards
+    else if (angle <= 270.0f)
+        motor.move(MotorDC::Directions::Backwords); // Left
+    else
+        motor.move(MotorDC::Directions::Backwords); // Backwards
 }
