@@ -1,7 +1,7 @@
 #include <FirebaseESP32.h>
 #include <WiFi.h>
 #include "../lib/pins.h"
-#include "../lib/MotorDC/MotorDC.h"
+#include "../lib/Wheels/Wheels.h"
 #include "../lib/laser/laser.h"
 #include "../lib/servo/servo.h"
 #include "../lib/miscellaneous.h"
