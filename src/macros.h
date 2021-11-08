@@ -1,12 +1,3 @@
-#include <FirebaseESP32.h>
-#include <WiFi.h>
-#include "../lib/pins.h"
-#include "../lib/Wheels/Wheels.h"
-#include "../lib/laser/laser.h"
-#include "../lib/servo/servo.h"
-#include "../lib/miscellaneous.h"
-#include "../lib/joystick/Joystick.h"
-
 #define WIFI_NAME_COLLEGE "Kinneret College"
 #define WIFI_PASS_COLLEGE ""
 
