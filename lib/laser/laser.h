@@ -18,4 +18,10 @@ namespace laser
     {
         digitalWrite(LASER_EMIT, HIGH);
     }
+
+	void init()
+	{
+		pinMode(LASER_RECIVE, INPUT);
+		pinMode(LASER_EMIT, OUTPUT);
+	}
 };

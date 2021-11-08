@@ -15,7 +15,7 @@ private:
 	unsigned int m_enable;
 
 	void stop(MotorPins&);
-	void forwards(MotorPins&);
+	void forwards(MotorPins &);
 	void backwards(MotorPins&);
 
 public:

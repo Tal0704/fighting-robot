@@ -1,13 +1,13 @@
-#define BUZZER_PIN 25
+#define BUZZER_PIN 0
 
 #define TRIG 0
 #define ECHO 0
 
 #define LASER_RECIVE 0
-#define LASER_EMIT 33
+#define LASER_EMIT 14
 
 #define SERVO_1 0
 
-#define L_STICK_X 35
-#define L_STICK_Y 27
-#define L_STICK_Z 34
+#define L_STICK_X 0
+#define L_STICK_Y 0
+#define L_STICK_Z 0
