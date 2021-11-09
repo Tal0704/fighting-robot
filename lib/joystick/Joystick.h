@@ -9,9 +9,11 @@ private:
 	Position pos;
 
 public:
-	Joystick() = delete;
+	Joystick();
 
 	Joystick(unsigned int x, unsigned int y, unsigned int z);
+
+	void construct(unsigned int x, unsigned int y, unsigned int z);
 
 	int getX() { return (analogRead(this->pos.x) - 1970); } // returns the postion of x where middle is 0
 	int getY() { return (analogRead(this->pos.y) - 1920); } // returns the postion of y where middle is 0

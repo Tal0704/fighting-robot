@@ -36,7 +36,6 @@ void moveWheels(Wheels &wheels)
 {
 	wheels.enable();
 	static Joystick lStick(L_STICK_X, L_STICK_Y, L_STICK_Z); // Left joyStick for moving the vehicle
-
 	if (fabs(lStick.getX()) <= 15.0f && fabs(lStick.getY()) <= 15.0f) // Checking if the joystick is in the dead zone
 	{
 		wheels.move(Wheels::Directions::Stop);
