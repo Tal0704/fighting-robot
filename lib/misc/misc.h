@@ -1,8 +1,8 @@
 #include <Arduino.h>
 #include <math.h>
-#include "joystick/Joystick.h"
-#include "Wheels.h"
-#include "pins.h"
+#include "../joystick/Joystick.h"
+#include "../Wheels/Wheels.h"
+#include "../pins.h"
 
 unsigned int getDistance();
 

@@ -5,7 +5,7 @@
 #include "../lib/Wheels/Wheels.h"
 #include "../lib/laser/laser.h"
 #include "../lib/servo/servo.h"
-#include "../lib/miscellaneous.h"
+#include "../lib/misc/misc.h"
 #include "../lib/joystick/Joystick.h"
 
 FirebaseData fbdata;
@@ -27,5 +27,5 @@ void setup()
 
 void loop()
 {
-	
+	buzz(100);
 }

@@ -1,7 +1,7 @@
 #include <math.h>
 #include <Arduino.h>
-#include "pins.h"
-#include "miscellaneous.h"
+#include "../pins.h"
+#include "misc.h"
 
 unsigned int getDistance()
 {
@@ -52,14 +52,14 @@ void moveWheels(Wheels &wheels)
 		angle = 0.0f;
 
 	// Using the pythagorean theorem to solve for the amount that was pushed
-	float amount = sqrt(fabs(lStick.getY() * lStick.getY()) + fabs(lStick.getX() * lStick.getX()));
+	// float amount = sqrt(fabs(lStick.getY() * lStick.getY()) + fabs(lStick.getX() * lStick.getX()));
 
 	if (angle <= 90.0f)
-		wheels.move(Wheels::Directions::Right);		// Right
+		wheels.move(Wheels::Directions::Right); // Right
 	else if (angle <= 180.0f)
-		wheels.move(Wheels::Directions::Forward);	// Forwards
+		wheels.move(Wheels::Directions::Forward); // Forwards
 	else if (angle <= 270.0f)
-		wheels.move(Wheels::Directions::Left);		// Left
+		wheels.move(Wheels::Directions::Left); // Left
 	else
 		wheels.move(Wheels::Directions::Backwords); // Backwards
 
