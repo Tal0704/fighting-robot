@@ -11,3 +11,7 @@
 #define L_STICK_X 0
 #define L_STICK_Y 0
 #define L_STICK_Z 0
+
+#define R_STICK_X 0
+#define R_STICK_Y 0
+#define R_STICK_Z 0

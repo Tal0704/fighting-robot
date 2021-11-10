@@ -19,3 +19,5 @@ public:
 	int getY() { return (analogRead(this->pos.y) - 1920); } // returns the postion of y where middle is 0
 	short getZ() { return digitalRead(this->pos.z); }
 };
+
+// 12

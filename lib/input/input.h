@@ -4,12 +4,13 @@
 #include "../pins.h"
 #include "../Wheels/Wheels.h"
 #include "vector.h"
+#include "../controller/controller.h"
 
 class Input
+	: public Controller
 {
 private:
 	Vector input;
-	Joystick lStick;
 
 public:
 	void moveWheels(Wheels &wheels);

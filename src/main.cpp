@@ -23,9 +23,17 @@ void setup()
 	// Serial.println(WiFi.localIP());
 
 	// Firebase.begin(FB_URL, FB_KEY);
+	Serial.begin(9600);
+	Serial.println(WiFi.macAddress());
 }
 
 void loop()
 {
-	buzz(100);
+	// if (Firebase.getInt(fbdata, "processor/laserEmitter"))
+	// {
+	// 	if(fbdata.intData())
+	// 		laser::emit();
+	// 	else
+	// 		laser::stopEmitting();
+	// }
 }
