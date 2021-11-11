@@ -2,5 +2,7 @@
 
 struct Vector
 {
-	float angle, amount;
+	float angle, strength;
+	Vector()
+		: angle(0), strength(0) {}
 };

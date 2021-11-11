@@ -9,4 +9,4 @@ unsigned int getDistance();
 // Active low
 void buzz(unsigned int delay_ms);
 
-void moveWheels();
+void initFirebase();

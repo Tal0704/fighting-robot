@@ -9,3 +9,5 @@ to pin 14, to set it up change the line
 #define LASER_EMIT 0 and change it to 
 #define LASER_EMIT 14
 
+core 0 for sending data
+core one 1 for reciving data 

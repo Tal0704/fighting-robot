@@ -1,7 +1,10 @@
 #include <math.h>
 #include <Arduino.h>
-#include "../pins.h"
+#include <WiFi.h>
+#include <Firebase.h>
 #include "misc.h"
+#include "../pins.h"
+#include "../../src/macros.h"
 
 unsigned int getDistance()
 {
@@ -32,36 +35,18 @@ void buzz(unsigned int delay_ms)
 	delay(delay_ms);
 }
 
-void moveWheels(Wheels &wheels)
+void initFirebase()
 {
-	wheels.enable();
-	static Joystick lStick(L_STICK_X, L_STICK_Y, L_STICK_Z); // Left joyStick for moving the vehicle
-	if (fabs(lStick.getX()) <= 15.0f && fabs(lStick.getY()) <= 15.0f) // Checking if the joystick is in the dead zone
+	WiFi.begin(WIFI_NAME_HOME, WIFI_PASS_HOME);
+	while (WiFi.status() != WL_CONNECTED)
 	{
-		wheels.move(Wheels::Directions::Stop);
-		wheels.disable();
-		return;
+#if defined(_DEBUG)
+		Serial.printf("wifi\n");
+#endif // _DEBUG
+		delay(1000);
 	}
-
-	float angle;
-	if (lStick.getX() != 0) // Stopping div by zero
-		// Using sin to get the angle of the stick
-		angle = sin(lStick.getY() / lStick.getX());
-	else
-		angle = 0.0f;
-
-	// Using the pythagorean theorem to solve for the amount that was pushed
-	// float amount = sqrt(fabs(lStick.getY() * lStick.getY()) + fabs(lStick.getX() * lStick.getX()));
-
-	if (angle <= 90.0f)
-		wheels.move(Wheels::Directions::Right); // Right
-	else if (angle <= 180.0f)
-		wheels.move(Wheels::Directions::Forward); // Forwards
-	else if (angle <= 270.0f)
-		wheels.move(Wheels::Directions::Left); // Left
-	else
-		wheels.move(Wheels::Directions::Backwords); // Backwards
-
-	wheels.move(Wheels::Directions::Stop);
-	wheels.disable();
+#if defined(_DEBUG)
+	Serial.printf("\nConnected!\n");
+#endif // _DEBUG
+	Firebase.begin(FB_URL, FB_KEY);
 }
