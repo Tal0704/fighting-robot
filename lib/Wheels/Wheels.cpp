@@ -40,7 +40,7 @@ void Wheels::move(Wheels::Directions dir)
 
 	case Directions::Forward:
 		for (MotorPins motor : this->m_motors)
-			this->stop(motor);
+			this->forwards(motor);
 		return;
 
 	case Directions::Right:
