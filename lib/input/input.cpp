@@ -40,10 +40,10 @@ void Input::getInputController()
 	lStick.z = (digitalRead(L_STICK_Z));
 }
 
-void reciveFunc(void *param)
+void *reciveFunc(void *param)
 {
 	Vector input;
-
+	
 	FirebaseData fbdata;
 	if (Firebase.getInt(fbdata, "/processor/controller/leftStick/strength"))
 		input.strength = fbdata.intData();
@@ -67,5 +67,38 @@ void Input::getInputApp()
 	{
 		input.angle = fbdata.intData();
 		Serial.printf("Strength: %.0lf, angle: %.0lf\n", input.strength, input.angle);
+	}
+}
+
+static Vector controllerData;
+
+void OnDataRecv(const uint8_t *mac, const uint8_t *incomingData, int len)
+{
+	memcpy(&controllerData, incomingData, sizeof(controllerData));
+}
+
+void Input::getInputController()
+{
+	const char controller[] = WROVER_E_MAC;
+	
+	esp_now_peer_info_t peerInfo;
+
+
+	memcpy(peerInfo.peer_addr, controller, 6); // 6 is the size of the mac address in bytes
+	peerInfo.channel = 0;
+	peerInfo.encrypt = false;
+
+	if (esp_now_add_peer(&peerInfo) != ESP_OK)
+	{
+		#if defined(_DEBUG)
+		Serial.println("Failed to add peer");
+		#endif
+
+		return;
+	}
+
+	while(1)
+	{
+		esp_now_register_recv_cb(OnDataRecv);
 	}
 }

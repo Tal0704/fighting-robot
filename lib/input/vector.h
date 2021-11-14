@@ -1,8 +1,17 @@
 #pragma once
 
-struct Vector
+union Vector
 {
-	float angle, strength;
+	struct
+	{
+	int angle, strength;
+	};
+
+	struct 
+	{
+		int x, y;
+	};
+
 	Vector()
-		: angle(0), strength(0) {}
+		: x(0), y(0) {}
 };
