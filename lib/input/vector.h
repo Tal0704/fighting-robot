@@ -4,7 +4,7 @@ union Vector
 {
 	struct
 	{
-	int angle, strength;
+		int angle, strength;
 	};
 
 	struct 

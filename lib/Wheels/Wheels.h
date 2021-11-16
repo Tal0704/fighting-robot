@@ -23,7 +23,7 @@ public:
 
 	enum class Directions
 	{
-		Backwords = 1,
+		Backwords = 0,
 		Forward,
 		Right,
 		Left,

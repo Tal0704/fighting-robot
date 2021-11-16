@@ -72,7 +72,7 @@ void Input::getInputApp()
 
 static Vector controllerData;
 
-void OnDataRecv(const uint8_t *mac, const uint8_t *incomingData, int len)
+void OnDataRecive(const uint8_t *mac, const uint8_t *incomingData, int len)
 {
 	memcpy(&controllerData, incomingData, sizeof(controllerData));
 }
@@ -99,6 +99,6 @@ void Input::getInputController()
 
 	while(1)
 	{
-		esp_now_register_recv_cb(OnDataRecv);
+		esp_now_register_recv_cb(OnDataRecive);
 	}
 }
