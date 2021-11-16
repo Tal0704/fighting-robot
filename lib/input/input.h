@@ -12,10 +12,6 @@
 	{                                           \
 		0x78, 0xE3, 0x6D, 0xCD, 0x07, 0x68 \
 	}
-#define WROVER_MAC                              \
-	{                                           \
-		0x94, 0xB9, 0x7E, 0xE2, 0x98, 0x50 \
-	}
 
 class Input
 	: public Controller

@@ -5,7 +5,6 @@ FirebaseData fbdata;
 
 void setup()
 {
-
 }
 
 void loop()
