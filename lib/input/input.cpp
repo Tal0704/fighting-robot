@@ -10,7 +10,7 @@ void Input::moveWheels(Wheels &wheels)
 		wheels.disable();
 		return;
 	}
-
+	
 	if (this->lStick.x != 0) // Stopping div by zero
 		// Using sin to get the angle of the stick
 		this->input.angle = sin(this->lStick.y / this->lStick.x);
