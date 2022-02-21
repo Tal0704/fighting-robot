@@ -40,6 +40,7 @@ void Input::getInputController()
 	lStick.z = (digitalRead(L_STICK_Z));
 }
 
+// Fetching data from firebase
 void *reciveFunc(void *param)
 {
 	Vector input;
@@ -52,7 +53,9 @@ void *reciveFunc(void *param)
 		input.angle = fbdata.intData() - 90;
 		if (input.angle < 0)
 			input.angle += 360;
+#if defined(_DEBUG)
 		Serial.printf("Strength: %.0lf, angle: %.0lf", input.strength, input.angle);
+#endif
 	}
 }
 

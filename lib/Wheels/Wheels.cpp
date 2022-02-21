@@ -1,28 +1,40 @@
 #include "Wheels.h"
 
+// Constructor, when the 
+// object is first initialized
+// the code below is executed
 Wheels::Wheels()
 {
+	// Setting the enable pin for the
+	// current object to output
 	pinMode(this->m_enable, OUTPUT);
-	for (MotorPins motor : this->m_motors)
+	// For each motor setting the 
+	// enable pin to output
+	for (MotorPins& motor : this->m_motors)
 	{
 		pinMode(motor.pin1, OUTPUT);
 		pinMode(motor.pin2, OUTPUT);
 	}
+	// Disabling the wheels so
+	// they wont move accidentally
 	this->disable();
 }
 
+// stopping the specified wheel
 void Wheels::stop(MotorPins &motor)
 {
 	digitalWrite(motor.pin1, LOW);
 	digitalWrite(motor.pin2, LOW);
 }
 
+// moving forwards the specified wheel
 void Wheels::forwards(MotorPins &motor)
 {
 	digitalWrite(motor.pin1, LOW);
 	digitalWrite(motor.pin2, HIGH);
 }
 
+// moving backwords the specified wheel
 void Wheels::backwards(MotorPins &motor)
 {
 	digitalWrite(motor.pin1, HIGH);
