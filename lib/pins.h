@@ -1,3 +1,4 @@
+#pragma once
 #define BUZZER_PIN 0
 
 #define TRIG 0

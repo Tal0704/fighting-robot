@@ -57,6 +57,8 @@ void *reciveFunc(void *param)
 		Serial.printf("Strength: %.0lf, angle: %.0lf", input.strength, input.angle);
 #endif
 	}
+
+	return nullptr;
 }
 
 void Input::getInputApp()
@@ -69,7 +71,11 @@ void Input::getInputApp()
 	if (Firebase.getInt(fbdata, "/processor/controller/leftStick/angle"))
 	{
 		input.angle = fbdata.intData();
-		Serial.printf("Strength: %.0lf, angle: %.0lf\n", input.strength, input.angle);
+		// Serial.printf("Strength: %d, angle: %d\n", input.strength, input.angle);
+		Serial.print("Strength: ");
+		Serial.print(input.strength);
+		Serial.print("Angle: ");
+		Serial.print(input.angle);
 	}
 }
 
@@ -80,28 +86,29 @@ void OnDataRecive(const uint8_t *mac, const uint8_t *incomingData, int len)
 	memcpy(&controllerData, incomingData, sizeof(controllerData));
 }
 
-void Input::getInputController()
-{
-	const char controller[] = WROVER_E_MAC;
-	
-	esp_now_peer_info_t peerInfo;
-
-
-	memcpy(peerInfo.peer_addr, controller, 6); // 6 is the size of the mac address in bytes
-	peerInfo.channel = 0;
-	peerInfo.encrypt = false;
-
-	if (esp_now_add_peer(&peerInfo) != ESP_OK)
-	{
-		#if defined(_DEBUG)
-		Serial.println("Failed to add peer");
-		#endif
-
-		return;
-	}
-
-	while(1)
-	{
-		esp_now_register_recv_cb(OnDataRecive);
-	}
-}
+// void Input::getInputController()
+// {
+// 	const char* controller = WROVER_E_MAC;
+// 	
+// 	esp_now_peer_info_t peerInfo;
+// 
+// 
+// 	memcpy(peerInfo.peer_addr, controller, 6); // 6 is the size of the mac address in bytes
+// 	peerInfo.channel = 0;
+// 	peerInfo.encrypt = false;
+// 
+// 	if (esp_now_add_peer(&peerInfo) != ESP_OK)
+// 	{
+// 		#if defined(_DEBUG)
+// 		Serial.println("Failed to add peer");
+// 		#endif
+// 
+// 		return;
+// 	}
+// 
+// 	while(1)
+// 	{
+// 		esp_now_register_recv_cb(OnDataRecive);
+// 	}
+// }
+// 

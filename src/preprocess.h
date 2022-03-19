@@ -1,14 +1,3 @@
-#include <WiFi.h>
-#include "../lib/pins.h"
-#include <Wheels.h>
-#include <laser.h>
-#include <servo.h>
-#include <misc.h>
-#include <Joystick.h>
-#include <input.h>
-#include <WiFi.h>
-
-
 #define WIFI_NAME_COLLEGE "Kinneret College"
 #define WIFI_PASS_COLLEGE ""
 
