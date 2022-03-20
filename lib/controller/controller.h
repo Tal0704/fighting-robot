@@ -1,6 +1,5 @@
 #pragma once
-#include "../pins.h"
-#include "../joystick/Joystick.h"
+#include <Joystick.h>
 
 // creating Class for 
 class Controller

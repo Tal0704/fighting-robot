@@ -1,6 +1,5 @@
-#include "preprocess.h"
+#include <inc.h>
 #include <WiFi.h>
-#include "../lib/pins.h"
 #include <Wheels.h>
 #include <laser.h>
 #include <servo.h>
@@ -9,6 +8,7 @@
 #include <input.h>
 #include <WiFi.h>
 #include <string>
+#include <firebaseInit.h>
 #include <addons/RTDBHelper.h>
 
 FirebaseData stream;
@@ -31,25 +31,10 @@ void doStream(StreamData data)
 	}
 }
 
-void doStreamTimeout(bool timeout)
-{
-	if(timeout)
-		Serial.println("Stream timed out, resuming...\n");
-
-	if(!stream.httpConnected())
-		Serial.printf("Error code: %d, reason: %s\n\n", stream.httpCode(), stream.errorReason().c_str());
-}
-
 void setup()
 {
 	Serial.begin(9600);
-	initFirebase("Meron-1", "0545668998");
-
-	if(!Firebase.beginStream(stream, "processor/controller/leftStick"))
-		Serial.printf("Stream begin error, %s\n\n", stream.errorReason().c_str());
-
-	Firebase.setStreamCallback(stream, doStream, doStreamTimeout);
-	Serial.println("\nCompleted setup succefully!");
+	initFirebase(WIFI_NAME_HOME, WIFI_PASS_HOME, doStream);
 }
 
 void loop()

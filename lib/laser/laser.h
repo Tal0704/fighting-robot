@@ -1,7 +1,5 @@
 #pragma once
-#include <Arduino.h>
-#include "../pins.h"
-
+#include <inc.h>
 // Creating a wrapper for laser
 // so that the call for the 
 // functions are clearer
