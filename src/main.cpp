@@ -12,22 +12,22 @@
 #include <addons/RTDBHelper.h>
 
 FirebaseData stream;
+Wheels wheels;
+Vector wheelsDir;
 
 void doStream(StreamData data)
 {
+	float d = data.floatData();
 	if(data.dataPath() == "/angle")
 	{
-		Serial.printf("Agnle = ");
-		printResult(data);
-		Serial.print("\n");
+		Serial.printf("Agnle = %.2f\n", d);
+		wheelsDir = Vector(d, wheelsDir.strength);
 	}
-	float d = data.floatData();
 
 	if(data.dataPath() == "/strength")
 	{
-		Serial.printf("Strength = ");
-		printResult(data);
-		Serial.print("\n");
+		Serial.printf("Strength = %.2f\n", d);
+		wheelsDir = Vector(wheelsDir.angle, d);
 	}
 }
 
@@ -43,7 +43,7 @@ void doStreamTimeout(bool timeout)
 void setup()
 {
 	Serial.begin(9600);
-	initFirebase();
+	initFirebase("Meron-1", "0545668998");
 
 	if(!Firebase.beginStream(stream, "processor/controller/leftStick"))
 		Serial.printf("Stream begin error, %s\n\n", stream.errorReason().c_str());
@@ -54,5 +54,5 @@ void setup()
 
 void loop()
 {
-
+	
 }
