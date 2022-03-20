@@ -8,29 +8,51 @@
 #include <Joystick.h>
 #include <input.h>
 #include <WiFi.h>
+#include <string>
+#include <addons/RTDBHelper.h>
 
-#define LED 19
-#define FREQ 5e3
-#define CHANNEL 0
+FirebaseData stream;
+Wheels wheels;
+Vector wheelsDir;
+
+void doStream(StreamData data)
+{
+	float d = data.floatData();
+	if(data.dataPath() == "/angle")
+	{
+		Serial.printf("Agnle = %.2f\n", d);
+		wheelsDir = Vector(d, wheelsDir.strength);
+	}
+
+	if(data.dataPath() == "/strength")
+	{
+		Serial.printf("Strength = %.2f\n", d);
+		wheelsDir = Vector(wheelsDir.angle, d);
+	}
+}
+
+void doStreamTimeout(bool timeout)
+{
+	if(timeout)
+		Serial.println("Stream timed out, resuming...\n");
+
+	if(!stream.httpConnected())
+		Serial.printf("Error code: %d, reason: %s\n\n", stream.httpCode(), stream.errorReason().c_str());
+}
 
 void setup()
 {
-	ledcSetup(CHANNEL, FREQ, 8);
+	Serial.begin(9600);
+	initFirebase("Meron-1", "0545668998");
 
-	ledcAttachPin(LED, CHANNEL);
+	if(!Firebase.beginStream(stream, "processor/controller/leftStick"))
+		Serial.printf("Stream begin error, %s\n\n", stream.errorReason().c_str());
+
+	Firebase.setStreamCallback(stream, doStream, doStreamTimeout);
+	Serial.println("\nCompleted setup succefully!");
 }
 
 void loop()
 {
-	for (size_t i = 0; i < 0xFF; i++)
-	{
-		ledcWrite(0, i);
-		delay(15);
-	}
-
-	for (size_t i = 0xFF; i > 0; i--)
-	{
-		ledcWrite(0, i);
-		delay(15);
-	}
+	
 }
