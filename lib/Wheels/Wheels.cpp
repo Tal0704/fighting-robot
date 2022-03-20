@@ -41,14 +41,14 @@ void Wheels::backwards(MotorPins &motor)
 	digitalWrite(motor.pin2, LOW);
 }
 
-void Wheels::move(Wheels::Directions dir)
+void Wheels::move(Wheels::Direction dir)
 {
 	// Checking what the direction we need to 
 	// turn the wheels
 	switch (dir)
 	{
 	// If backwords
-	case Directions::Backwords:
+	case Direction::Backwords:
 		// itterate through all the motors
 		for (MotorPins& motor : this->m_motors)
 			// Move backwords
@@ -57,7 +57,7 @@ void Wheels::move(Wheels::Directions dir)
 		return;
 
 	// If Forwards
-	case Directions::Forward:
+	case Direction::Forward:
 		// itterate through all the motors
 		for (MotorPins& motor : this->m_motors)
 			// Move forwads
@@ -66,7 +66,7 @@ void Wheels::move(Wheels::Directions dir)
 		return;
 
 	// If Right
-	case Directions::Right:
+	case Direction::Right:
 		for (int i = 0; i < 2; i++)
 		{
 			// Move the right wheels back
@@ -79,7 +79,7 @@ void Wheels::move(Wheels::Directions dir)
 		return;
 
 	// If left
-	case Directions::Left:
+	case Direction::Left:
 		for (int i = 0; i < 2; i++)
 		{
 			// Move the right wheels forwards
@@ -92,7 +92,7 @@ void Wheels::move(Wheels::Directions dir)
 		return;
 
 	// If stop
-	case Directions::Stop:
+	case Direction::Stop:
 		// Itterate through all the motors
 		for (MotorPins& motor : this->m_motors)
 			// Stop all the motors

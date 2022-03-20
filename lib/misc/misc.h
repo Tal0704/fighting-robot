@@ -10,4 +10,4 @@ unsigned int getDistance();
 // Active low
 void buzz(unsigned int delay_ms);
 
-void initFirebase();
+void initFirebase(const char *wifiName, const char *wifiPass);

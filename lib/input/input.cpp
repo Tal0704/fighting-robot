@@ -6,7 +6,7 @@ void Input::moveWheels(Wheels &wheels)
 
 	if (fabs(this->lStick.x) <= 15.0f && fabs(this->lStick.y) <= 15.0f) // Checking if the joystick is in the dead zone
 	{
-		wheels.move(Wheels::Directions::Stop);
+		wheels.move(Wheels::Direction::Stop);
 		wheels.disable();
 		return;
 	}
@@ -21,15 +21,15 @@ void Input::moveWheels(Wheels &wheels)
 	this->input.strength = sqrt(fabs(this->lStick.y * this->lStick.y) + fabs(this->lStick.x * this->lStick.x));
 
 	if (this->input.angle <= 90.0f)
-		wheels.move(Wheels::Directions::Right); // Right
+		wheels.move(Wheels::Direction::Right); // Right
 	else if (this->input.angle <= 180.0f)
-		wheels.move(Wheels::Directions::Forward); // Forwards
+		wheels.move(Wheels::Direction::Forward); // Forwards
 	else if (this->input.angle <= 270.0f)
-		wheels.move(Wheels::Directions::Left); // Left
+		wheels.move(Wheels::Direction::Left); // Left
 	else
-		wheels.move(Wheels::Directions::Backwords); // Backwards
+		wheels.move(Wheels::Direction::Backwords); // Backwards
 
-	wheels.move(Wheels::Directions::Stop);
+	wheels.move(Wheels::Direction::Stop);
 	wheels.disable();
 }
 

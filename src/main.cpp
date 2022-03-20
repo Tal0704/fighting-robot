@@ -8,51 +8,29 @@
 #include <Joystick.h>
 #include <input.h>
 #include <WiFi.h>
-#include <string>
-#include <addons/RTDBHelper.h>
 
-FirebaseData stream;
-
-void doStream(StreamData data)
-{
-	if(data.dataPath() == "/angle")
-	{
-		Serial.printf("Agnle = ");
-		printResult(data);
-		Serial.print("\n");
-	}
-	float d = data.floatData();
-
-	if(data.dataPath() == "/strength")
-	{
-		Serial.printf("Strength = ");
-		printResult(data);
-		Serial.print("\n");
-	}
-}
-
-void doStreamTimeout(bool timeout)
-{
-	if(timeout)
-		Serial.println("Stream timed out, resuming...\n");
-
-	if(!stream.httpConnected())
-		Serial.printf("Error code: %d, reason: %s\n\n", stream.httpCode(), stream.errorReason().c_str());
-}
+#define LED 19
+#define FREQ 5e3
+#define CHANNEL 0
 
 void setup()
 {
-	Serial.begin(9600);
-	initFirebase();
+	ledcSetup(CHANNEL, FREQ, 8);
 
-	if(!Firebase.beginStream(stream, "processor/controller/leftStick"))
-		Serial.printf("Stream begin error, %s\n\n", stream.errorReason().c_str());
-
-	Firebase.setStreamCallback(stream, doStream, doStreamTimeout);
-	Serial.println("\nCompleted setup succefully!");
+	ledcAttachPin(LED, CHANNEL);
 }
 
 void loop()
 {
+	for (size_t i = 0; i < 0xFF; i++)
+	{
+		ledcWrite(0, i);
+		delay(15);
+	}
 
+	for (size_t i = 0xFF; i > 0; i--)
+	{
+		ledcWrite(0, i);
+		delay(15);
+	}
 }

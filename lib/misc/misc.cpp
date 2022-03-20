@@ -6,10 +6,10 @@
 #include "../pins.h"
 #include "../../src/preprocess.h"
 
-void initFirebase()
+void initFirebase(const char* wifiName, const char* wifiPass)
 {
 	Firebase.begin(FB_URL, FB_KEY);
-	WiFi.begin(WIFI_NAME_HOME, WIFI_PASS_HOME);
+	WiFi.begin(wifiName, wifiPass);
 
 	while(WiFi.status() != WL_CONNECTED)
 	{

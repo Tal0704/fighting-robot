@@ -21,7 +21,7 @@ private:
 public:
 	Wheels();
 
-	enum class Directions
+	enum Direction
 	{
 		Backwords = 0,
 		Forward,
@@ -32,5 +32,5 @@ public:
 
 	void enable() { digitalWrite(this->m_enable, HIGH); }
 	void disable() { digitalWrite(this->m_enable, LOW); }
-	void move(Directions dir);
+	void move(Direction dir);
 };
