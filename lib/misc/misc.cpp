@@ -1,23 +1,4 @@
-#include <math.h>
-#include <Arduino.h>
-#include <WiFi.h>
-#include <Firebase.h>
 #include "misc.h"
-#include "../pins.h"
-#include "../../src/preprocess.h"
-
-void initFirebase(const char* wifiName, const char* wifiPass)
-{
-	Firebase.begin(FB_URL, FB_KEY);
-	WiFi.begin(wifiName, wifiPass);
-
-	while(WiFi.status() != WL_CONNECTED)
-	{
-		delay(300);
-		Serial.print(".");
-	}
-	Serial.println("\nConnected Succesfully!");
-}
 
 unsigned int getDistance()
 {
@@ -49,6 +30,12 @@ void buzz(unsigned int delay_ms)
 	// Output '1' to BUZZER_PIN pin (stop makeing sound)
 	digitalWrite(BUZZER_PIN, HIGH);
 	delay(delay_ms);
+}
+
+void moveWheels(Wheels& wheels)
+{
+	wheels.enable();
+	static Joystick lStick;
 }
 
 // moving the Robots wheels

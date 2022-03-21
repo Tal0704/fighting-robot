@@ -6,7 +6,6 @@
 #include <Joystick.h>
 #include <controller.h>
 #include <FirebaseESP32.h>
-#include "../pins.h"
 
 #define WROVER_E_MAC                            \
 	{                                           \

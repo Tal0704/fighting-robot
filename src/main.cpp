@@ -1,6 +1,5 @@
-#include "preprocess.h"
+#include <inc.h>
 #include <WiFi.h>
-#include "../lib/pins.h"
 #include <Wheels.h>
 #include <laser.h>
 #include <servo.h>
@@ -8,29 +7,37 @@
 #include <Joystick.h>
 #include <input.h>
 #include <WiFi.h>
+#include <string>
+#include <firebaseInit.h>
+#include <addons/RTDBHelper.h>
 
-#define LED 19
-#define FREQ 5e3
-#define CHANNEL 0
+FirebaseData stream;
+Wheels wheels;
+Vector wheelsDir;
+
+void doStream(StreamData data)
+{
+	float d = data.floatData();
+	if(data.dataPath() == "/angle")
+	{
+		Serial.printf("Agnle = %.2f\n", d);
+		wheelsDir = Vector(d, wheelsDir.strength);
+	}
+
+	if(data.dataPath() == "/strength")
+	{
+		Serial.printf("Strength = %.2f\n", d);
+		wheelsDir = Vector(wheelsDir.angle, d);
+	}
+}
 
 void setup()
 {
-	ledcSetup(CHANNEL, FREQ, 8);
-
-	ledcAttachPin(LED, CHANNEL);
+	Serial.begin(9600);
+	initFirebase(WIFI_NAME_HOME, WIFI_PASS_HOME, doStream);
 }
 
 void loop()
 {
-	for (size_t i = 0; i < 0xFF; i++)
-	{
-		ledcWrite(0, i);
-		delay(15);
-	}
-
-	for (size_t i = 0xFF; i > 0; i--)
-	{
-		ledcWrite(0, i);
-		delay(15);
-	}
+	
 }

@@ -33,12 +33,12 @@ void Input::moveWheels(Wheels &wheels)
 	wheels.disable();
 }
 
-void Input::getInputController()
-{
-	lStick.x = (analogRead(L_STICK_X) - 1970);
-	lStick.y = (analogRead(L_STICK_Y) - 1920);
-	lStick.z = (digitalRead(L_STICK_Z));
-}
+// void Input::getInputController()
+// {
+// 	lStick.x = (analogRead(L_STICK_X) - 1970);
+// 	lStick.y = (analogRead(L_STICK_Y) - 1920);
+// 	lStick.z = (digitalRead(L_STICK_Z));
+// }
 
 // Fetching data from firebase
 void *reciveFunc(void *param)
