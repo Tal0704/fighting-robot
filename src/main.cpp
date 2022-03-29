@@ -8,11 +8,17 @@
 void setup()
 {
 	Serial.begin(9600);
-
-	firebase::init(WIFI_NAME_HOME, WIFI_PASS_HOME, doGetFb);
-	laser::init();
-	// initServo();
+	Serial.println();
 	initMotors();
+	for (size_t i = 0; i < 5; i++)
+	{
+		delay(500);
+	}
+	
+
+	firebase::init(WIFI_NAME_COLLEGE, WIFI_PASS_COLLEGE, doGetFb);
+	laser::init();
+	servo::init();
 }
 
 void loop()
@@ -22,45 +28,8 @@ void loop()
 	// else
 	// 	Firebase.setIntAsync(firebase::fbdata, "processor/isHit", false);
 
-	// if(firebase::input::isShooting)
-	// 	digitalWrite(LASER_EMIT, HIGH);
+	Firebase.setIntAsync(firebase::fbdata, "processor/isHit", laser::isHit() ? true : false);
 
-	using namespace firebase::input;
-	if(leftStick.strength > 0)
-	{ 
-		if(leftStick.angle > 45 && leftStick.angle < 135)
-		{
-			digitalWrite(LEFT_TOP_WHEEL, HIGH);
-			digitalWrite(RIGHT_TOP_WHEEL, HIGH);
-			digitalWrite(LEFT_BOTTOM_WHEEL, LOW);
-			digitalWrite(RIGHT_BOTTOM_WHEEL, LOW);
-			Serial.println("Top");
-		}
-		else if(leftStick.angle > 135 && leftStick.angle < 225)
-		{
-			digitalWrite(LEFT_TOP_WHEEL, LOW);
-			digitalWrite(RIGHT_TOP_WHEEL, HIGH);
-			digitalWrite(LEFT_BOTTOM_WHEEL, LOW);
-			digitalWrite(RIGHT_BOTTOM_WHEEL, HIGH);
-			Serial.println("Left");
-		}
-		else if(leftStick.angle > 225 && leftStick.angle < 315)
-		{
-			digitalWrite(LEFT_TOP_WHEEL, LOW);
-			digitalWrite(RIGHT_TOP_WHEEL, LOW);
-			digitalWrite(LEFT_BOTTOM_WHEEL, HIGH);
-			digitalWrite(RIGHT_BOTTOM_WHEEL, HIGH);
-			Serial.println("Bottom");
-		}
-		else if(leftStick.angle > 315 || leftStick.angle < 45)
-		{
-			digitalWrite(LEFT_TOP_WHEEL, HIGH);
-			digitalWrite(RIGHT_TOP_WHEEL, LOW);
-			digitalWrite(LEFT_BOTTOM_WHEEL, HIGH);
-			digitalWrite(RIGHT_BOTTOM_WHEEL, LOW);
-			Serial.println("Right");
-		}
-	}
 }
 
 // void setup()

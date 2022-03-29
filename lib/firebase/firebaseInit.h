@@ -13,7 +13,6 @@ void setCallback(FirebaseData::StreamEventCallback callback);
  
 namespace input
 {
-static bool isShooting;
 static Vector leftStick, rightStick;
 }
 };
