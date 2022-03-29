@@ -92,10 +92,10 @@ void initMotors()
 	pinMode(LEFT_BOTTOM_WHEEL, OUTPUT);
 	pinMode(RIGHT_BOTTOM_WHEEL, OUTPUT);
 	 
-	digitalWrite(LEFT_TOP_WHEEL, HIGH);
-	digitalWrite(RIGHT_TOP_WHEEL, HIGH);
-	digitalWrite(LEFT_BOTTOM_WHEEL, HIGH);
-	digitalWrite(RIGHT_BOTTOM_WHEEL, HIGH);
+	digitalWrite(LEFT_TOP_WHEEL, LOW);
+	digitalWrite(RIGHT_TOP_WHEEL, LOW);
+	digitalWrite(LEFT_BOTTOM_WHEEL, LOW);
+	digitalWrite(RIGHT_BOTTOM_WHEEL, LOW);
 	 
 	Serial.println("Initialized motors");
 }

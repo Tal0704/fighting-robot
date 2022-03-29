@@ -40,7 +40,7 @@ namespace laser
 	// Initialize the lasers
 	void init()
 	{
-		pinMode(LASER_RECIVE, INPUT_PULLUP);
+		pinMode(LASER_RECIVE, INPUT);
 		pinMode(LASER_EMIT, OUTPUT);
 	}
 };

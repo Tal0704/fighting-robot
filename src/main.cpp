@@ -23,36 +23,16 @@ void setup()
 
 void loop()
 {
-	// if(laser::isHit())
-	// 	Firebase.setIntAsync(firebase::fbdata, "processor/isHit", true);
-	// else
-	// 	Firebase.setIntAsync(firebase::fbdata, "processor/isHit", false);
+	if(laser::isHit())
+	{
+		Serial.print("hit\n");
+		Firebase.setIntAsync(firebase::fbdata, "processor/isHit", true);
+	}
+	else
+	{
+		Firebase.setIntAsync(firebase::fbdata, "processor/isHit", false);
+		Serial.print("not hit\n");
+	}
 
-	Firebase.setIntAsync(firebase::fbdata, "processor/isHit", laser::isHit() ? true : false);
 
 }
-
-// void setup()
-// {
-// 	ESP32PWM::allocateTimer(0);
-// 	ESP32PWM::allocateTimer(1);
-// 	ESP32PWM::allocateTimer(2);
-// 	ESP32PWM::allocateTimer(3);
-// 	ser.setPeriodHertz(50);
-// 	ser.attach(18, 500, 2400);
-// }
-
-// void loop()
-// {
-// 	for (size_t i = 0; i < 180; i++)
-// 	{
-// 		ser.write(i);
-// 		delay(5);
-// 	}
-// 	for (size_t i = 180; i >= 1; i--)
-// 	{
-// 		ser.write(i);
-// 		delay(5);
-// 	}
-// 	Serial.println("finished");
-// }
