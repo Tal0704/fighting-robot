@@ -1,19 +1,28 @@
 #pragma once
 #include <inc.h>
+#include <firebaseInit.h>
+#include <soc/rtc_wdt.h>
+
+bool isGameOver = false;
+
+void IRAM_ATTR isr()
+{
+	Firebase.setIntAsync(firebase::fbdata, "/processor/laserEmitter", 1);
+	// Serial.println("Laser Hit!");
+}
+
 // Creating a wrapper for laser
 // so that the call for the 
 // functions are clearer
 namespace laser
 {
-	// Returning if the robot has been heat
-    bool isHit()
-    {
-		// Returning the complimant of
-		// the logic value that is in 
-		// the pin LASER_RECIVE
-        return !digitalRead(LASER_RECIVE);
-    }
-
+	bool isHit()
+	{
+		// return the compliment of
+		// the state of LASER_RECIVE pin
+		return !digitalRead(LASER_RECIVE);
+	}
+	 
 	// Shoot the laser from the robot
     void emit()
     {
@@ -28,10 +37,10 @@ namespace laser
         digitalWrite(LASER_EMIT, HIGH);
     }
 
-	// Initialize the laser
+	// Initialize the lasers
 	void init()
 	{
-		pinMode(LASER_RECIVE, INPUT);
+		pinMode(LASER_RECIVE, INPUT_PULLUP);
 		pinMode(LASER_EMIT, OUTPUT);
 	}
 };

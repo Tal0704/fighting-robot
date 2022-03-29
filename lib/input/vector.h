@@ -4,17 +4,17 @@ union Vector
 {
 	struct
 	{
-		int angle, strength;
+		float angle, strength;
 	};
 
 	struct 
 	{
-		int x, y;
+		float x, y;
 	};
 
 	Vector()
 		: x(0), y(0) {}
 
-	Vector(int x, int y)
+	Vector(float x, float y)
 		: x(x), y(y) {}
 };

@@ -32,58 +32,61 @@ void buzz(unsigned int delay_ms)
 	delay(delay_ms);
 }
 
-void moveWheels(Wheels& wheels)
+Vector convertPolarToCartezian(const Vector &vect)
 {
-	wheels.enable();
-	static Joystick lStick;
+	return Vector(vect.strength * cosf(vect.angle), vect.strength * sinf(vect.angle));
 }
+ 
+void doGetFb(StreamData data)
+{
+	using namespace firebase::input;
+	static Vector ltemp, rtemp;
+	if(data.dataPath() == "/controller/leftStick/strength")
+	{ 
+		// getting the strength of the left stick
+		ltemp.strength = data.intData();
+		leftStick = convertPolarToCartezian(ltemp);
+	}
+	if(data.dataPath() == "/controller/leftStick/angle")
+	{ 
+		// getting the angle of the left stick
+		ltemp.angle = data.intData();
+		leftStick = convertPolarToCartezian(ltemp);
+	}
+		 
+	if(data.dataPath() == "/controller/rightStick/strength")
+	{ 
+		// getting the strength of the right stick
+		rtemp.strength = data.intData();
+		rightStick = convertPolarToCartezian(rtemp);
+		servo::horizontal.write(rightStick.x);
+		// Serial.printf("x: %lf, y: %lf\n", rightStick.x, rightStick.y);
+	}
+	if(data.dataPath() == "/controller/rightStick/angle")
+	{ 
+		// getting the angle of the right stick
+		rtemp.angle = data.intData();
+		rightStick = convertPolarToCartezian(rtemp);
+		servo::horizontal.write(rightStick.x);
+		// Serial.printf("x: %lf, y: %lf\n", rightStick.x, rightStick.y);
+	}
 
-// moving the Robots wheels
-// Parameters are a refernce to a Wheels object
+	if(data.dataPath() == "/laserEmitter")
+		// getting if the robot should fire or not 
+		firebase::input::isShooting = data.boolData(); 
 
-// void moveWheels(Wheels &wheels)
-// {
-// 	// Enabling the wheels object
-// 	wheels.enable();
-// 	// Left joyStick for moving the vehicle
-// 	static Joystick lStick(L_STICK_X, L_STICK_Y, L_STICK_Z); 
-// 
-// 	// Checking if the joystick is in the dead zone
-// 	if (fabs(lStick.x) <= 15.0f && fabs(lStick.y) <= 15.0f) 
-// 	{
-// 		// Stop movment from the wheels
-// 		wheels.move(Wheels::Directions::Stop);
-// 		// Disable the wheels so they 
-// 		// wont move accidently
-// 		wheels.disable();
-// 		// Retrun from funciton, stop execution
-// 		return;
-// 	}
-// 
-// 	// Edge case for division by zero
-// 	if (lStick.getX() != 0) 
-// 		// Using trigonometry to get the angle of the stick
-// 		angle = sin(lStick.getY() / lStick.getX());
-// 	else
-// 	 	// If the left stick is resting
-// 		// then the angle should be at zero
-// 		float angle = 0.0f;
-// 
-// 	// Using the pythagorean theorem to solve for the distance
-// 	// from the center of the joystick to the current position
-// 	float distance = sqrt(fabs(lStick.getY() * lStick.getY()) + fabs(lStick.getX() * lStick.getX()));
-// 
-// 	// Moveing the robot according to the angle
-// 	if (angle <= 90.0f)
-// 		wheels.move(Wheels::Directions::Right);		// Right
-// 	else if (angle <= 180.0f)
-// 		wheels.move(Wheels::Directions::Forward);	// Forwards
-// 	else if (angle <= 270.0f)
-// 		wheels.move(Wheels::Directions::Left);		// Left
-// 	else
-// 		wheels.move(Wheels::Directions::Backwords); // Backwards
-// 
-// 	// Disable the wheels so they
-// 	// wont move accidently
-// 	wheels.disable();
-// }
+#if defined(_DEBUG)
+		Serial.printf("\nleft stick: str: %d, ang: %d\n", leftStick.strength, leftStick.angle);
+		Serial.printf("\nright stick: str: %d, ang: %d\n", rightStick.strength, rightStick.angle);
+		Serial.printf("%s", isShooting ? "true\n": "false\n");
+#endif
+}
+ 
+void initMotors()
+{
+	digitalWrite(LEFT_TOP_WHEEL, OUTPUT);
+	digitalWrite(RIGHT_TOP_WHEEL, OUTPUT);
+	digitalWrite(LEFT_BOTTOM_WHEEL, OUTPUT);
+	digitalWrite(RIGHT_BOTTOM_WHEEL, OUTPUT);
+	Serial.println("Initialized motors");
+}
