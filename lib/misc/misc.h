@@ -5,7 +5,6 @@
 #include <servo.h>
 #include <firebaseInit.h>
 #include <Firebase.h>
-#include <Joystick.h>
 #include <vector.h>
  
 unsigned int getDistance();
