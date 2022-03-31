@@ -102,56 +102,62 @@ void initMotors()
 
 void doGetFb(StreamData data)
 {
+	// using the namespace so that we don't have to call it every time
 	using namespace firebase::input;
+	 
+	// using two vectors, one for each joystick
 	static Vector ltemp, rtemp;
+	 
+	// if the path of the data is the strength of the left stick
 	if(data.dataPath() == "/controller/leftStick/strength")
 	{ 
 		// getting the strength of the left stick
 		leftStick.strength = data.intData();
-		Serial.printf("x: %lf, y: %lf\n", leftStick.x, leftStick.y);
+		// moveing the wheels
 		moveWheels();
 	}
+	// if the path of the data is the angle of the left stick
 	if(data.dataPath() == "/controller/leftStick/angle")
 	{ 
 		// getting the angle of the left stick
 		leftStick.angle = data.intData();
-		Serial.printf("x: %lf, y: %lf\n", leftStick.x, leftStick.y);
+		// moveing the wheels
 		moveWheels();
 	}
 		 
+	// if the path of the data is the strength of the left stick
 	if(data.dataPath() == "/controller/rightStick/strength")
 	{ 
 		// getting the strength of the right stick
 		rtemp.strength = data.intData();
+		// converting the data from polar to Cartezian form
 		rightStick = convertPolarToCartezian(rtemp);
+		// moving the horizontal servo to the right angle
 		servo::horizontal.write(rightStick.x);
-		// Serial.printf("x: %lf, y: %lf\n", rightStick.x, rightStick.y);
 	}
+	// if the path of the data is the angle of the right stick
 	if(data.dataPath() == "/controller/rightStick/angle")
 	{ 
 		// getting the angle of the right stick
 		rtemp.angle = data.intData();
+		// converting the data from polar to Cartezian form
 		rightStick = convertPolarToCartezian(rtemp);
+		// moving the horizontal servo to the right angle
 		servo::horizontal.write(rightStick.x);
-		// Serial.printf("x: %lf, y: %lf\n", rightStick.x, rightStick.y);
 	}
 
+	// if the path of the data is the laser emitter
 	if(data.dataPath() == "/laserEmitter")
 	{ 
 		// getting if the robot should fire or not 
 		if(data.boolData())
-		{ 
-			digitalWrite(LASER_EMIT, HIGH);
-			Serial.println("asdasd");
-		}
+			// shooting the laser
+			laser::emit();
 		else
-			digitalWrite(LASER_EMIT, LOW);
+			// stop shooting the laser
+			laser::stopEmitting();
 	}
 
+	// setting up a slight delay to avoid problems with the cores
 	delay(50);
-#if defined(_DEBUG)
-		Serial.printf("\nleft stick: str: %d, ang: %d\n", leftStick.strength, leftStick.angle);
-		Serial.printf("\nright stick: str: %d, ang: %d\n", rightStick.strength, rightStick.angle);
-		Serial.printf("%s", isShooting ? "true\n": "false\n");
-#endif
 }

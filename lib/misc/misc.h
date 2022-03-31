@@ -6,6 +6,7 @@
 #include <firebaseInit.h>
 #include <Firebase.h>
 #include <vector.h>
+#include <laser.h>
  
 unsigned int getDistance();
 
