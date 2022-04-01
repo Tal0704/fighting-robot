@@ -1,7 +1,23 @@
 #pragma once
 #include <inc.h>
 #include <firebase.h>
+#include <vector.h>
 
-void initFirebase(const char *wifiName, const char *wifiPass, FirebaseData::StreamEventCallback callback);
+namespace firebase
+{
 
-void setFirebaseCallback(FirebaseData::StreamEventCallback callback);
+static FirebaseData fbdata;
+ 
+void init(const char *wifiName, const char *wifiPass, FirebaseData::StreamEventCallback callback);
+
+void setCallback(FirebaseData::StreamEventCallback callback);
+ 
+namespace input
+{
+
+static Vector leftStick, rightStick;
+
+}
+ 
+
+};

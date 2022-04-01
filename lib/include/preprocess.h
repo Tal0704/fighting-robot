@@ -1,3 +1,4 @@
+#pragma once
 #define WIFI_NAME_COLLEGE "Kinneret College"
 #define WIFI_PASS_COLLEGE ""
 

@@ -32,58 +32,134 @@ void buzz(unsigned int delay_ms)
 	delay(delay_ms);
 }
 
-void moveWheels(Wheels& wheels)
+Vector convertPolarToCartezian(const Vector &vect)
 {
-	wheels.enable();
-	static Joystick lStick;
+	return Vector(vect.strength * cosf(vect.angle), vect.strength * sinf(vect.angle));
+}
+ 
+void moveWheels()
+{
+	using namespace firebase::input;
+	if(leftStick.strength > 0)
+	{ 
+		if(leftStick.angle > 45 && leftStick.angle < 135)
+		{
+			digitalWrite(LEFT_TOP_WHEEL, HIGH);
+			digitalWrite(RIGHT_TOP_WHEEL, HIGH);
+			digitalWrite(LEFT_BOTTOM_WHEEL, LOW);
+			digitalWrite(RIGHT_BOTTOM_WHEEL, LOW);
+			Serial.println("Top");
+		}
+		else if(leftStick.angle > 135 && leftStick.angle < 225)
+		{
+			digitalWrite(LEFT_TOP_WHEEL, LOW);
+			digitalWrite(RIGHT_TOP_WHEEL, HIGH);
+			digitalWrite(LEFT_BOTTOM_WHEEL, LOW);
+			digitalWrite(RIGHT_BOTTOM_WHEEL, HIGH);
+			Serial.println("Left");
+		}
+		else if(leftStick.angle > 225 && leftStick.angle < 315)
+		{
+			digitalWrite(LEFT_TOP_WHEEL, LOW);
+			digitalWrite(RIGHT_TOP_WHEEL, LOW);
+			digitalWrite(LEFT_BOTTOM_WHEEL, HIGH);
+			digitalWrite(RIGHT_BOTTOM_WHEEL, HIGH);
+			Serial.println("Bottom");
+		}
+		else if(leftStick.angle > 315 || leftStick.angle < 45)
+		{
+			digitalWrite(LEFT_TOP_WHEEL, HIGH);
+			digitalWrite(RIGHT_TOP_WHEEL, LOW);
+			digitalWrite(LEFT_BOTTOM_WHEEL, HIGH);
+			digitalWrite(RIGHT_BOTTOM_WHEEL, LOW);
+			Serial.println("Right");
+		}
+	}
+	else
+	{
+		digitalWrite(LEFT_TOP_WHEEL, LOW);
+		digitalWrite(RIGHT_TOP_WHEEL, LOW);
+		digitalWrite(LEFT_BOTTOM_WHEEL, LOW);
+		digitalWrite(RIGHT_BOTTOM_WHEEL, LOW);
+		Serial.println("Stop");
+	}
+}
+ 
+void initMotors()
+{
+	pinMode(LEFT_TOP_WHEEL, OUTPUT);
+	pinMode(RIGHT_TOP_WHEEL, OUTPUT);
+	pinMode(LEFT_BOTTOM_WHEEL, OUTPUT);
+	pinMode(RIGHT_BOTTOM_WHEEL, OUTPUT);
+	 
+	digitalWrite(LEFT_TOP_WHEEL, LOW);
+	digitalWrite(RIGHT_TOP_WHEEL, LOW);
+	digitalWrite(LEFT_BOTTOM_WHEEL, LOW);
+	digitalWrite(RIGHT_BOTTOM_WHEEL, LOW);
+	 
+	Serial.println("Initialized motors");
 }
 
-// moving the Robots wheels
-// Parameters are a refernce to a Wheels object
+void doGetFb(StreamData data)
+{
+	// using the namespace so that we don't have to call it every time
+	using namespace firebase::input;
+	 
+	// using two vectors, one for each joystick
+	static Vector ltemp, rtemp;
+	 
+	// if the path of the data is the strength of the left stick
+	if(data.dataPath() == "/controller/leftStick/strength")
+	{ 
+		// getting the strength of the left stick
+		leftStick.strength = data.intData();
+		// moveing the wheels
+		moveWheels();
+	}
+	// if the path of the data is the angle of the left stick
+	if(data.dataPath() == "/controller/leftStick/angle")
+	{ 
+		// getting the angle of the left stick
+		leftStick.angle = data.intData();
+		// moveing the wheels
+		moveWheels();
+	}
+		 
+	// if the path of the data is the strength of the left stick
+	if(data.dataPath() == "/controller/rightStick/strength")
+	{ 
+		// getting the strength of the right stick
+		rtemp.strength = data.intData();
+		// converting the data from polar to Cartezian form
+		rightStick = convertPolarToCartezian(rtemp);
+		// moving the horizontal servo to the right angle
+		servo::horizontal.write(rightStick.x);
+		Serial.printf("Servo is in pos: %d\n", servo::horizontal.read());
+	}
+	// if the path of the data is the angle of the right stick
+	if(data.dataPath() == "/controller/rightStick/angle")
+	{ 
+		// getting the angle of the right stick
+		rtemp.angle = data.intData();
+		// converting the data from polar to Cartezian form
+		rightStick = convertPolarToCartezian(rtemp);
+		// moving the horizontal servo to the right angle
+		servo::horizontal.write(rightStick.x);
+		Serial.printf("Servo is in pos: %d\n", servo::horizontal.read());
+	}
 
-// void moveWheels(Wheels &wheels)
-// {
-// 	// Enabling the wheels object
-// 	wheels.enable();
-// 	// Left joyStick for moving the vehicle
-// 	static Joystick lStick(L_STICK_X, L_STICK_Y, L_STICK_Z); 
-// 
-// 	// Checking if the joystick is in the dead zone
-// 	if (fabs(lStick.x) <= 15.0f && fabs(lStick.y) <= 15.0f) 
-// 	{
-// 		// Stop movment from the wheels
-// 		wheels.move(Wheels::Directions::Stop);
-// 		// Disable the wheels so they 
-// 		// wont move accidently
-// 		wheels.disable();
-// 		// Retrun from funciton, stop execution
-// 		return;
-// 	}
-// 
-// 	// Edge case for division by zero
-// 	if (lStick.getX() != 0) 
-// 		// Using trigonometry to get the angle of the stick
-// 		angle = sin(lStick.getY() / lStick.getX());
-// 	else
-// 	 	// If the left stick is resting
-// 		// then the angle should be at zero
-// 		float angle = 0.0f;
-// 
-// 	// Using the pythagorean theorem to solve for the distance
-// 	// from the center of the joystick to the current position
-// 	float distance = sqrt(fabs(lStick.getY() * lStick.getY()) + fabs(lStick.getX() * lStick.getX()));
-// 
-// 	// Moveing the robot according to the angle
-// 	if (angle <= 90.0f)
-// 		wheels.move(Wheels::Directions::Right);		// Right
-// 	else if (angle <= 180.0f)
-// 		wheels.move(Wheels::Directions::Forward);	// Forwards
-// 	else if (angle <= 270.0f)
-// 		wheels.move(Wheels::Directions::Left);		// Left
-// 	else
-// 		wheels.move(Wheels::Directions::Backwords); // Backwards
-// 
-// 	// Disable the wheels so they
-// 	// wont move accidently
-// 	wheels.disable();
-// }
+	// if the path of the data is the laser emitter
+	if(data.dataPath() == "/laserEmitter")
+	{ 
+		// getting if the robot should fire or not 
+		if(data.boolData())
+			// shooting the laser
+			laser::emit();
+		else
+			// stop shooting the laser
+			laser::stopEmitting();
+	}
+
+	// setting up a slight delay to avoid problems with the cores
+	delay(50);
+}
