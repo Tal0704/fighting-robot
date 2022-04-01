@@ -7,6 +7,7 @@
 #include <Firebase.h>
 #include <vector.h>
 #include <laser.h>
+#include <Wheel.h>
  
 unsigned int getDistance();
 

@@ -1,6 +1,7 @@
 #pragma once
 #include <inc.h>
 #include <math.h>
+#include <MotorPins.h>
 
 // motors[0] = Upper right
 // motors[1] = Lower right
@@ -10,29 +11,20 @@
 // left  = +
 // right = -
 
-class Wheels
+class Wheel
 {
 private:
-	pin m_motors[4];
+	MotorPins m_motor;
 	unsigned int m_enable;
 
-	void stop(const pin&);
-	void forwards(const pin&, float speed);
-	void backwards(const pin&);
+	Wheel();
 
 public:
-	Wheels();
+	Wheel(pin forwards, pin backwards);
 
-	enum Direction
-	{
-		Backwords = 0,
-		Forward,
-		Right,
-		Left,
-		Stop
-	};
-
+	void stop();
+	void forwards();
+	void backwards();
 	void enable() { digitalWrite(this->m_enable, HIGH); }
 	void disable() { digitalWrite(this->m_enable, LOW); }
-	void move(float angle, float speed);
 };

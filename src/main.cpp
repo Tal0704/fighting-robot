@@ -9,14 +9,13 @@ void setup()
 	// initializing Serial monitor
 	Serial.begin(9600);
 	Serial.println();
-	// initializing motors
-	initMotors();
+
 	// initializing laser
 	laser::init();
-	servo::init();
+
 	// initializing servo
-	servo::horizontal.write(90);
-	Serial.printf("Servo is in pos: %d\n", servo::horizontal.read());
+	servo::init();
+
 	// initializing firebase with wifi name, password and callback function
 	firebase::init(WIFI_NAME_HOME, WIFI_PASS_HOME, doGetFb);
 }

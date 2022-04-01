@@ -4,5 +4,5 @@
 // defines the pins of each motor
 struct MotorPins
 {
-    unsigned int pin1, pin2;
+    unsigned int forwards, backwards;
 };

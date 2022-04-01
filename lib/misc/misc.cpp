@@ -40,66 +40,72 @@ Vector convertPolarToCartezian(const Vector &vect)
 void moveWheels()
 {
 	using namespace firebase::input;
+	static Wheel leftTop(LEFT_TOP_WHEEL_FOR, LEFT_TOP_WHEEL_BACK), rightTop(RIGHT_TOP_WHEEL_FOR, RIGHT_TOP_WHEEL_BACK),
+	leftBottom(LEFT_BOTTOM_WHEEL_FOR, LEFT_BOTTOM_WHEEL_BACK), rightBottom(RIGHT_BOTTOM_WHEEL_FOR, RIGHT_BOTTOM_WHEEL_BACK);
+	 
+	// is the user pushing the stick
 	if(leftStick.strength > 0)
-	{ 
+	{
+		leftTop.enable();
+		rightTop.enable();
+		leftBottom.enable();
+		rightBottom.enable();
+		// Forwards
 		if(leftStick.angle > 45 && leftStick.angle < 135)
 		{
-			digitalWrite(LEFT_TOP_WHEEL, HIGH);
-			digitalWrite(RIGHT_TOP_WHEEL, HIGH);
-			digitalWrite(LEFT_BOTTOM_WHEEL, LOW);
-			digitalWrite(RIGHT_BOTTOM_WHEEL, LOW);
-			Serial.println("Top");
+			// restricting movement of the robot,
+			// if there is an obstacle 5 cm or
+			// closer, it will stop
+			if(getDistance() >= 5)
+			{ 
+				leftTop.forwards();
+				rightTop.forwards();
+				leftBottom.forwards();
+				rightBottom.forwards();
+			}
+
+			Serial.println("Forwards");
 		}
+		// Left
 		else if(leftStick.angle > 135 && leftStick.angle < 225)
 		{
-			digitalWrite(LEFT_TOP_WHEEL, LOW);
-			digitalWrite(RIGHT_TOP_WHEEL, HIGH);
-			digitalWrite(LEFT_BOTTOM_WHEEL, LOW);
-			digitalWrite(RIGHT_BOTTOM_WHEEL, HIGH);
+			rightBottom.forwards();
+			rightTop.forwards();
+			leftBottom.backwards();
+			leftTop.backwards();
 			Serial.println("Left");
 		}
+		// Back
 		else if(leftStick.angle > 225 && leftStick.angle < 315)
 		{
-			digitalWrite(LEFT_TOP_WHEEL, LOW);
-			digitalWrite(RIGHT_TOP_WHEEL, LOW);
-			digitalWrite(LEFT_BOTTOM_WHEEL, HIGH);
-			digitalWrite(RIGHT_BOTTOM_WHEEL, HIGH);
-			Serial.println("Bottom");
+			leftTop.backwards();
+			rightTop.backwards();
+			leftBottom.backwards();
+			rightBottom.backwards();
+			
+			Serial.println("Back");
 		}
+		// Right
 		else if(leftStick.angle > 315 || leftStick.angle < 45)
 		{
-			digitalWrite(LEFT_TOP_WHEEL, HIGH);
-			digitalWrite(RIGHT_TOP_WHEEL, LOW);
-			digitalWrite(LEFT_BOTTOM_WHEEL, HIGH);
-			digitalWrite(RIGHT_BOTTOM_WHEEL, LOW);
+			leftTop.backwards();
+			rightTop.backwards();
+			leftBottom.forwards();
+			rightBottom.forwards();
+			
 			Serial.println("Right");
 		}
 	}
 	else
 	{
-		digitalWrite(LEFT_TOP_WHEEL, LOW);
-		digitalWrite(RIGHT_TOP_WHEEL, LOW);
-		digitalWrite(LEFT_BOTTOM_WHEEL, LOW);
-		digitalWrite(RIGHT_BOTTOM_WHEEL, LOW);
+		leftTop.stop();
+		rightTop.stop();
+		leftBottom.stop();
+		rightBottom.stop();
 		Serial.println("Stop");
 	}
 }
  
-void initMotors()
-{
-	pinMode(LEFT_TOP_WHEEL, OUTPUT);
-	pinMode(RIGHT_TOP_WHEEL, OUTPUT);
-	pinMode(LEFT_BOTTOM_WHEEL, OUTPUT);
-	pinMode(RIGHT_BOTTOM_WHEEL, OUTPUT);
-	 
-	digitalWrite(LEFT_TOP_WHEEL, LOW);
-	digitalWrite(RIGHT_TOP_WHEEL, LOW);
-	digitalWrite(LEFT_BOTTOM_WHEEL, LOW);
-	digitalWrite(RIGHT_BOTTOM_WHEEL, LOW);
-	 
-	Serial.println("Initialized motors");
-}
-
 void doGetFb(StreamData data)
 {
 	// using the namespace so that we don't have to call it every time
@@ -113,15 +119,18 @@ void doGetFb(StreamData data)
 	{ 
 		// getting the strength of the left stick
 		leftStick.strength = data.intData();
-		// moveing the wheels
-		moveWheels();
+
+		//moving the wheels of the robot
+		if(!((getDistance() <= 5) && (leftStick.strength > 225 && leftStick.strength < 315)))
+			moveWheels();
 	}
 	// if the path of the data is the angle of the left stick
 	if(data.dataPath() == "/controller/leftStick/angle")
 	{ 
 		// getting the angle of the left stick
 		leftStick.angle = data.intData();
-		// moveing the wheels
+
+		//moving the wheels of the robot
 		moveWheels();
 	}
 		 
