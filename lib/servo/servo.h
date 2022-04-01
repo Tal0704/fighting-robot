@@ -4,7 +4,7 @@
 
 namespace servo
 {
-static Servo horizontal, vertical;
+Servo horizontal, vertical;
 
 void init();
 }

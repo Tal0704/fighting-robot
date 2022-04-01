@@ -11,20 +11,14 @@ void setup()
 	Serial.println();
 	// initializing motors
 	initMotors();
-	
 	// initializing laser
 	laser::init();
-	// initializing servo
 	servo::init();
-	Serial.print("Started writing to servo!\n");
+	// initializing servo
 	servo::horizontal.write(90);
-	Serial.print("Started writing to servo!\n");
-	for (size_t i = 0; i < 10; i++)
-	{
-		delay(500);
-	}
+	Serial.printf("Servo is in pos: %d\n", servo::horizontal.read());
 	// initializing firebase with wifi name, password and callback function
-	firebase::init(WIFI_NAME_COLLEGE, WIFI_PASS_COLLEGE, doGetFb);
+	firebase::init(WIFI_NAME_HOME, WIFI_PASS_HOME, doGetFb);
 }
 
 void loop()
