@@ -25,6 +25,6 @@ public:
 	void stop();
 	void forwards();
 	void backwards();
-	void enable() { digitalWrite(this->m_enable, HIGH); }
-	void disable() { digitalWrite(this->m_enable, LOW); }
+	inline void enable() { digitalWrite(this->m_enable, HIGH); }
+	inline void disable() { digitalWrite(this->m_enable, LOW); }
 };

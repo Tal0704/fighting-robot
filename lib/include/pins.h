@@ -7,10 +7,10 @@ typedef uint8_t pin;
 #define TRIG 15
 #define ECHO 4
 
-#define LASER_RECIVE 17
-#define LASER_EMIT 16
+#define LASER_RECIVE 34
+#define LASER_EMIT 22
 
-#define SERVO_HOR 18
+#define SERVO_HOR 23
 #define SERVO_VER 19
 
 #define LEFT_TOP_WHEEL_FOR 25

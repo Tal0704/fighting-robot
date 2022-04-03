@@ -18,4 +18,6 @@ Vector convertPolarToCartezian(const Vector &vect);
 
 void doGetFb(StreamData data);
 
-void initMotors();
+inline void initMotors();
+
+void initServo();

@@ -14,7 +14,7 @@ void setup()
 	laser::init();
 
 	// initializing servo
-	servo::init();
+	initServo();
 
 	// initializing firebase with wifi name, password and callback function
 	firebase::init(WIFI_NAME_HOME, WIFI_PASS_HOME, doGetFb);
@@ -22,6 +22,15 @@ void setup()
 
 void loop()
 {
-	// if the robot is hit, send tru to firebase otherwise send false to firebase
-	Firebase.setIntAsync(firebase::fbdata, "processor/isHit", laser::isHit() ? true : false);
+	// if the robot is hit, send true to firebase otherwise send false to firebase
+	if (laser::isHit())
+	{
+		Firebase.setIntAsync(firebase::fbdata, "processor/isHit",true);
+		buzz(20);
+		Serial.println("Robot got hit!");
+	}
+	else
+	{
+		Firebase.setIntAsync(firebase::fbdata, "processor/isHit", false);
+	}
 }

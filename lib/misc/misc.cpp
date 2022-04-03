@@ -36,35 +36,30 @@ Vector convertPolarToCartezian(const Vector &vect)
 {
 	return Vector(vect.strength * cosf(vect.angle), vect.strength * sinf(vect.angle));
 }
- 
-void moveWheels()
+
+static Wheel leftTop(LEFT_TOP_WHEEL_FOR, LEFT_TOP_WHEEL_BACK), rightTop(RIGHT_TOP_WHEEL_FOR, RIGHT_TOP_WHEEL_BACK),
+leftBottom(LEFT_BOTTOM_WHEEL_FOR, LEFT_BOTTOM_WHEEL_BACK), rightBottom(RIGHT_BOTTOM_WHEEL_FOR, RIGHT_BOTTOM_WHEEL_BACK);
+
+inline void moveWheels()
 {
 	using namespace firebase::input;
-	static Wheel leftTop(LEFT_TOP_WHEEL_FOR, LEFT_TOP_WHEEL_BACK), rightTop(RIGHT_TOP_WHEEL_FOR, RIGHT_TOP_WHEEL_BACK),
-	leftBottom(LEFT_BOTTOM_WHEEL_FOR, LEFT_BOTTOM_WHEEL_BACK), rightBottom(RIGHT_BOTTOM_WHEEL_FOR, RIGHT_BOTTOM_WHEEL_BACK);
-	 
+
 	// is the user pushing the stick
 	if(leftStick.strength > 0)
 	{
-		leftTop.enable();
-		rightTop.enable();
-		leftBottom.enable();
-		rightBottom.enable();
 		// Forwards
 		if(leftStick.angle > 45 && leftStick.angle < 135)
 		{
 			// restricting movement of the robot,
 			// if there is an obstacle 5 cm or
 			// closer, it will stop
-			if(getDistance() >= 5)
-			{ 
-				leftTop.forwards();
-				rightTop.forwards();
-				leftBottom.forwards();
-				rightBottom.forwards();
-			}
+			// if(getDistance() >= 5)
+			leftTop.forwards();
+			rightTop.forwards();
+			leftBottom.forwards();
+			rightBottom.forwards();
 
-			Serial.println("Forwards");
+			// Serial.println("Forwards");
 		}
 		// Left
 		else if(leftStick.angle > 135 && leftStick.angle < 225)
@@ -73,7 +68,7 @@ void moveWheels()
 			rightTop.forwards();
 			leftBottom.backwards();
 			leftTop.backwards();
-			Serial.println("Left");
+			// Serial.println("Left");
 		}
 		// Back
 		else if(leftStick.angle > 225 && leftStick.angle < 315)
@@ -83,7 +78,7 @@ void moveWheels()
 			leftBottom.backwards();
 			rightBottom.backwards();
 			
-			Serial.println("Back");
+			// Serial.println("Back");
 		}
 		// Right
 		else if(leftStick.angle > 315 || leftStick.angle < 45)
@@ -93,7 +88,7 @@ void moveWheels()
 			leftBottom.forwards();
 			rightBottom.forwards();
 			
-			Serial.println("Right");
+			// Serial.println("Right");
 		}
 	}
 	else
@@ -102,10 +97,12 @@ void moveWheels()
 		rightTop.stop();
 		leftBottom.stop();
 		rightBottom.stop();
-		Serial.println("Stop");
+		// Serial.println("Stop");
 	}
 }
- 
+
+Servo horizontal, vertical;
+
 void doGetFb(StreamData data)
 {
 	// using the namespace so that we don't have to call it every time
@@ -121,8 +118,7 @@ void doGetFb(StreamData data)
 		leftStick.strength = data.intData();
 
 		//moving the wheels of the robot
-		if(!((getDistance() <= 5) && (leftStick.strength > 225 && leftStick.strength < 315)))
-			moveWheels();
+		moveWheels();
 	}
 	// if the path of the data is the angle of the left stick
 	if(data.dataPath() == "/controller/leftStick/angle")
@@ -142,7 +138,9 @@ void doGetFb(StreamData data)
 		// converting the data from polar to Cartezian form
 		rightStick = convertPolarToCartezian(rtemp);
 		// moving the horizontal servo to the right angle
-		servo::horizontal.write(rightStick.x);
+		horizontal.write(rightStick.x);
+		vertical.write(rightStick.y);
+		// Serial.printf("Servo at pos %d, %d\n", rightStick.x, rightStick.y);
 	}
 	// if the path of the data is the angle of the right stick
 	if(data.dataPath() == "/controller/rightStick/angle")
@@ -152,7 +150,9 @@ void doGetFb(StreamData data)
 		// converting the data from polar to Cartezian form
 		rightStick = convertPolarToCartezian(rtemp);
 		// moving the horizontal servo to the right angle
-		servo::horizontal.write(rightStick.x);
+		horizontal.write(rightStick.x);
+		vertical.write(rightStick.y);
+		// Serial.printf("Servo at pos %d, %d\n", horizontal.read(), vertical.read());
 	}
 
 	// if the path of the data is the laser emitter
@@ -160,8 +160,10 @@ void doGetFb(StreamData data)
 	{ 
 		// getting if the robot should fire or not 
 		if(data.boolData())
+		{
 			// shooting the laser
 			laser::emit();
+		}
 		else
 			// stop shooting the laser
 			laser::stopEmitting();
@@ -169,4 +171,23 @@ void doGetFb(StreamData data)
 
 	// setting up a slight delay to avoid problems with the cores
 	delay(50);
+}
+
+void initServo()
+{
+	Serial.println("Initializing servo");
+	ESP32PWM::allocateTimer(0);
+	ESP32PWM::allocateTimer(1);
+	ESP32PWM::allocateTimer(2);
+	ESP32PWM::allocateTimer(3);
+
+	horizontal.setPeriodHertz(50);
+	horizontal.attach(18, 500, 2400);
+	horizontal.write(0);
+
+	vertical.setPeriodHertz(50);
+	vertical.attach(SERVO_VER, 500, 2400);
+	vertical.write(0);
+
+	Serial.print("Finished initializing servo\n");
 }
