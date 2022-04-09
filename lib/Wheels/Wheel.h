@@ -17,14 +17,13 @@ private:
 	MotorPins m_motor;
 	unsigned int m_enable;
 
-	Wheel();
-
 public:
-	Wheel(pin forwards, pin backwards);
+	Wheel();
+	Wheel(pin forwards, pin backwards, pin enable);
 
-	void stop();
-	void forwards();
-	void backwards();
-	inline void enable() { digitalWrite(this->m_enable, HIGH); }
-	inline void disable() { digitalWrite(this->m_enable, LOW); }
+	void stop() const;
+	void forwards() const;
+	void backwards() const;
+	inline void enable() const { digitalWrite(this->m_enable, HIGH); }
+	inline void disable() const { digitalWrite(this->m_enable, LOW); }
 };

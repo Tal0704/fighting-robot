@@ -8,6 +8,7 @@
 #include <vector.h>
 #include <laser.h>
 #include <Wheel.h>
+#include <unordered_map>
  
 unsigned int getDistance();
 

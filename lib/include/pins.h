@@ -2,17 +2,19 @@
  
 typedef uint8_t pin;
  
-#define BUZZER_PIN 0
+#define BUZZER_PIN 15
 
-#define TRIG 15
-#define ECHO 4
+#define TRIG 0
+#define ECHO 0
 
 #define LASER_RECIVE 34
 #define LASER_EMIT 22
 
 #define SERVO_HOR 23
 #define SERVO_VER 19
-
+ 
+#define MOTOR_EN 0
+ 
 #define LEFT_TOP_WHEEL_FOR 25
 #define LEFT_TOP_WHEEL_BACK 26
  

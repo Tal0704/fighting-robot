@@ -36,13 +36,22 @@ Vector convertPolarToCartezian(const Vector &vect)
 {
 	return Vector(vect.strength * cosf(vect.angle), vect.strength * sinf(vect.angle));
 }
-
-static Wheel leftTop(LEFT_TOP_WHEEL_FOR, LEFT_TOP_WHEEL_BACK), rightTop(RIGHT_TOP_WHEEL_FOR, RIGHT_TOP_WHEEL_BACK),
-leftBottom(LEFT_BOTTOM_WHEEL_FOR, LEFT_BOTTOM_WHEEL_BACK), rightBottom(RIGHT_BOTTOM_WHEEL_FOR, RIGHT_BOTTOM_WHEEL_BACK);
-
+ 
 inline void moveWheels()
 {
+	static std::unordered_map<std::string, Wheel> wheels = {
+		{"lb", Wheel(LEFT_BOTTOM_WHEEL_FOR, LEFT_BOTTOM_WHEEL_BACK, MOTOR_EN)},
+		{"lt", Wheel(LEFT_TOP_WHEEL_FOR, LEFT_TOP_WHEEL_BACK, MOTOR_EN)},
+		{"rb", Wheel(RIGHT_BOTTOM_WHEEL_FOR, RIGHT_BOTTOM_WHEEL_BACK, MOTOR_EN)},
+		{"rt", Wheel(RIGHT_TOP_WHEEL_FOR, RIGHT_TOP_WHEEL_BACK, MOTOR_EN)}
+	};
+
 	using namespace firebase::input;
+
+	for(const auto& pair : wheels)
+	{
+		pair.second.enable();
+	}
 
 	// is the user pushing the stick
 	if(leftStick.strength > 0)
@@ -50,54 +59,56 @@ inline void moveWheels()
 		// Forwards
 		if(leftStick.angle > 45 && leftStick.angle < 135)
 		{
-			// restricting movement of the robot,
-			// if there is an obstacle 5 cm or
-			// closer, it will stop
-			// if(getDistance() >= 5)
-			leftTop.forwards();
-			rightTop.forwards();
-			leftBottom.forwards();
-			rightBottom.forwards();
+			for(const auto& pair : wheels)
+			{
+				pair.second.forwards();
+			}		
 
-			// Serial.println("Forwards");
+			Serial.println("Forwards");
 		}
 		// Left
 		else if(leftStick.angle > 135 && leftStick.angle < 225)
 		{
-			rightBottom.forwards();
-			rightTop.forwards();
-			leftBottom.backwards();
-			leftTop.backwards();
-			// Serial.println("Left");
+			wheels["rb"].forwards();
+			wheels["rt"].forwards();
+			wheels["lb"].backwards();
+			wheels["lt"].backwards();
+			 
+			Serial.println("Left");
 		}
 		// Back
 		else if(leftStick.angle > 225 && leftStick.angle < 315)
 		{
-			leftTop.backwards();
-			rightTop.backwards();
-			leftBottom.backwards();
-			rightBottom.backwards();
+			for(const auto& pair : wheels)
+			{
+				pair.second.backwards();
+			}		
 			
-			// Serial.println("Back");
+			Serial.println("Back");
 		}
 		// Right
 		else if(leftStick.angle > 315 || leftStick.angle < 45)
 		{
-			leftTop.backwards();
-			rightTop.backwards();
-			leftBottom.forwards();
-			rightBottom.forwards();
-			
-			// Serial.println("Right");
+			wheels["rb"].backwards();
+			wheels["rt"].backwards();
+			wheels["lb"].forwards();
+			wheels["lt"].forwards();
+
+			Serial.println("Right");
 		}
 	}
 	else
 	{
-		leftTop.stop();
-		rightTop.stop();
-		leftBottom.stop();
-		rightBottom.stop();
-		// Serial.println("Stop");
+		for(const auto& pair : wheels)
+		{
+			pair.second.stop();
+		}
+
+		Serial.println("Stop");
+	}
+	for(const auto& pair : wheels)
+	{
+		pair.second.disable();
 	}
 }
 
@@ -140,7 +151,7 @@ void doGetFb(StreamData data)
 		// moving the horizontal servo to the right angle
 		horizontal.write(rightStick.x);
 		vertical.write(rightStick.y);
-		// Serial.printf("Servo at pos %d, %d\n", rightStick.x, rightStick.y);
+		Serial.printf("Servo at pos %d, %d\n", rightStick.x, rightStick.y);
 	}
 	// if the path of the data is the angle of the right stick
 	if(data.dataPath() == "/controller/rightStick/angle")
@@ -152,7 +163,7 @@ void doGetFb(StreamData data)
 		// moving the horizontal servo to the right angle
 		horizontal.write(rightStick.x);
 		vertical.write(rightStick.y);
-		// Serial.printf("Servo at pos %d, %d\n", horizontal.read(), vertical.read());
+		Serial.printf("Servo at pos %d, %d\n", horizontal.read(), vertical.read());
 	}
 
 	// if the path of the data is the laser emitter
@@ -168,9 +179,6 @@ void doGetFb(StreamData data)
 			// stop shooting the laser
 			laser::stopEmitting();
 	}
-
-	// setting up a slight delay to avoid problems with the cores
-	delay(50);
 }
 
 void initServo()
@@ -182,7 +190,7 @@ void initServo()
 	ESP32PWM::allocateTimer(3);
 
 	horizontal.setPeriodHertz(50);
-	horizontal.attach(18, 500, 2400);
+	horizontal.attach(SERVO_HOR, 500, 2400);
 	horizontal.write(0);
 
 	vertical.setPeriodHertz(50);

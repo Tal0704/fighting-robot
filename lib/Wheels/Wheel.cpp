@@ -6,42 +6,45 @@
 // Constructor:
 //  when the object is first initialized
 // the code below is executed
-Wheel::Wheel(pin forwards, pin backwards)
+Wheel::Wheel(pin forwards, pin backwards, pin enable)
 {
 	// Assigning each motor with it's respective pin
 	this->m_motor.forwards = forwards;
 	this->m_motor.backwards = backwards;
+	this->m_enable = enable;
 
 	// Setting the enable pin for the
 	// current object to output
 	pinMode(this->m_enable, OUTPUT);
 	 
-	// enableing the pins of the motor as output
+	// setting the pins of the motor as output
 	pinMode(this->m_motor.forwards, OUTPUT);
 	pinMode(this->m_motor.backwards, OUTPUT);
+}
 
-	// Disabling the wheels so
-	// they wont move accidentally
-	this->stop();
-	this->disable();
+Wheel::Wheel()
+{
+	this->m_motor.forwards = 0;
+	this->m_motor.backwards = 0;
+	this->m_enable = 0;
 }
 
 // stopping the specified wheel
-void Wheel::stop()
+void Wheel::stop() const
 {
 	digitalWrite(this->m_motor.forwards, LOW);
 	digitalWrite(this->m_motor.backwards, LOW);
 }
 
 // moving forwards the specified wheel
-void Wheel::forwards()
+void Wheel::forwards() const
 {
 	digitalWrite(this->m_motor.forwards, HIGH);
 	digitalWrite(this->m_motor.backwards, LOW);
 }
 
 // moving backwords the specified wheel
-void Wheel::backwards()
+void Wheel::backwards() const
 {
 	digitalWrite(this->m_motor.forwards, LOW);
 	digitalWrite(this->m_motor.backwards, HIGH);

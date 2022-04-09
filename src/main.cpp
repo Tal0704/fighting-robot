@@ -13,11 +13,13 @@ void setup()
 	// initializing laser
 	laser::init();
 
+	// initializing firebase with wifi name, password and callback function
+	firebase::init("Meron-1", "0545668998", doGetFb);
+	
 	// initializing servo
 	initServo();
 
-	// initializing firebase with wifi name, password and callback function
-	firebase::init(WIFI_NAME_HOME, WIFI_PASS_HOME, doGetFb);
+	pinMode(BUZZER_PIN, OUTPUT);
 }
 
 void loop()
@@ -26,11 +28,12 @@ void loop()
 	if (laser::isHit())
 	{
 		Firebase.setIntAsync(firebase::fbdata, "processor/isHit",true);
-		buzz(20);
-		Serial.println("Robot got hit!");
+		digitalWrite(BUZZER_PIN, LOW);
+		// Serial.println("Robot got hit!");
 	}
 	else
 	{
 		Firebase.setIntAsync(firebase::fbdata, "processor/isHit", false);
+		digitalWrite(BUZZER_PIN, HIGH);
 	}
 }
