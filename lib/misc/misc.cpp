@@ -125,7 +125,7 @@ void doGetFb(StreamData data)
 	// if the path of the data is the strength of the left stick
 	if(data.dataPath() == "/controller/leftStick/strength")
 	{ 
-		// getting the strength of the left stick
+		// update the strength of the left stick
 		leftStick.strength = data.intData();
 
 		//moving the wheels of the robot
@@ -134,35 +134,25 @@ void doGetFb(StreamData data)
 	// if the path of the data is the angle of the left stick
 	if(data.dataPath() == "/controller/leftStick/angle")
 	{ 
-		// getting the angle of the left stick
+		// update the angle of the left stick
 		leftStick.angle = data.intData();
 
 		//moving the wheels of the robot
 		moveWheels();
 	}
 		 
-	// if the path of the data is the strength of the left stick
-	if(data.dataPath() == "/controller/rightStick/strength")
+	// if the path of the data is the x position of the right stick
+	if(data.dataPath() == "/controller/rightStick/x")
 	{ 
-		// getting the strength of the right stick
-		rtemp.strength = data.intData();
-		// converting the data from polar to Cartezian form
-		rightStick = convertPolarToCartezian(rtemp);
-		// moving the horizontal servo to the right angle
-		horizontal.write(rightStick.x);
-		vertical.write(rightStick.y);
-		Serial.printf("Servo at pos %d, %d\n", rightStick.x, rightStick.y);
+		// writing to the horizontal servo the position it should be at
+		horizontal.write(data.intData() + 90);
+		Serial.printf("Servo at pos %d, %d\n", horizontal.read(), vertical.read());
 	}
-	// if the path of the data is the angle of the right stick
-	if(data.dataPath() == "/controller/rightStick/angle")
+	// if the path of the data is the y position of the right stick
+	if(data.dataPath() == "/controller/rightStick/y")
 	{ 
-		// getting the angle of the right stick
-		rtemp.angle = data.intData();
-		// converting the data from polar to Cartezian form
-		rightStick = convertPolarToCartezian(rtemp);
-		// moving the horizontal servo to the right angle
-		horizontal.write(rightStick.x);
-		vertical.write(rightStick.y);
+		// writing to the vertical servo the position it should be at
+		vertical.write(data.intData() + 90);
 		Serial.printf("Servo at pos %d, %d\n", horizontal.read(), vertical.read());
 	}
 
@@ -191,11 +181,11 @@ void initServo()
 
 	horizontal.setPeriodHertz(50);
 	horizontal.attach(SERVO_HOR, 500, 2400);
-	horizontal.write(0);
+	horizontal.write(90);
 
 	vertical.setPeriodHertz(50);
 	vertical.attach(SERVO_VER, 500, 2400);
-	vertical.write(0);
+	vertical.write(90);
 
 	Serial.print("Finished initializing servo\n");
 }
