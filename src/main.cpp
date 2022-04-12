@@ -20,6 +20,8 @@ void setup()
 	initServo();
 
 	pinMode(BUZZER_PIN, OUTPUT);
+
+	buzz(500);
 }
 
 void loop()

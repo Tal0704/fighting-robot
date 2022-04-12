@@ -31,11 +31,6 @@ void buzz(unsigned int delay_ms)
 	digitalWrite(BUZZER_PIN, HIGH);
 	delay(delay_ms);
 }
-
-Vector convertPolarToCartezian(const Vector &vect)
-{
-	return Vector(vect.strength * cosf(vect.angle), vect.strength * sinf(vect.angle));
-}
  
 inline void moveWheels()
 {
@@ -48,67 +43,48 @@ inline void moveWheels()
 
 	using namespace firebase::input;
 
-	for(const auto& pair : wheels)
-	{
-		pair.second.enable();
-	}
+	wheels["lb"].setPWM(leftStick.strength);
 
 	// is the user pushing the stick
-	if(leftStick.strength > 0)
-	{
-		// Forwards
-		if(leftStick.angle > 45 && leftStick.angle < 135)
-		{
-			for(const auto& pair : wheels)
-			{
-				pair.second.forwards();
-			}		
-
-			Serial.println("Forwards");
-		}
-		// Left
-		else if(leftStick.angle > 135 && leftStick.angle < 225)
-		{
-			wheels["rb"].forwards();
-			wheels["rt"].forwards();
-			wheels["lb"].backwards();
-			wheels["lt"].backwards();
-			 
-			Serial.println("Left");
-		}
-		// Back
-		else if(leftStick.angle > 225 && leftStick.angle < 315)
-		{
-			for(const auto& pair : wheels)
-			{
-				pair.second.backwards();
-			}		
-			
-			Serial.println("Back");
-		}
-		// Right
-		else if(leftStick.angle > 315 || leftStick.angle < 45)
-		{
-			wheels["rb"].backwards();
-			wheels["rt"].backwards();
-			wheels["lb"].forwards();
-			wheels["lt"].forwards();
-
-			Serial.println("Right");
-		}
-	}
-	else
+	// Forwards
+	if(leftStick.angle > 45 && leftStick.angle < 135)
 	{
 		for(const auto& pair : wheels)
 		{
-			pair.second.stop();
-		}
+			pair.second.forwards();
+		}		
 
-		Serial.println("Stop");
+		Serial.println("Forwards");
 	}
-	for(const auto& pair : wheels)
+	// Left
+	else if(leftStick.angle > 135 && leftStick.angle < 225)
 	{
-		pair.second.disable();
+		wheels["rb"].forwards();
+		wheels["rt"].forwards();
+		wheels["lb"].backwards();
+		wheels["lt"].backwards();
+			
+		Serial.println("Left");
+	}
+	// Back
+	else if(leftStick.angle > 225 && leftStick.angle < 315)
+	{
+		for(const auto& pair : wheels)
+		{
+			pair.second.backwards();
+		}		
+		
+		Serial.println("Back");
+	}
+	// Right
+	else if(leftStick.angle > 315 || leftStick.angle < 45)
+	{
+		wheels["rb"].backwards();
+		wheels["rt"].backwards();
+		wheels["lb"].forwards();
+		wheels["lt"].forwards();
+
+		Serial.println("Right");
 	}
 }
 
@@ -145,14 +121,16 @@ void doGetFb(StreamData data)
 	if(data.dataPath() == "/controller/rightStick/x")
 	{ 
 		// writing to the horizontal servo the position it should be at
-		horizontal.write(data.intData() + 90);
+		horizontal.setPeriodHertz(50);
+		horizontal.write(data.intData());
 		Serial.printf("Servo at pos %d, %d\n", horizontal.read(), vertical.read());
 	}
 	// if the path of the data is the y position of the right stick
 	if(data.dataPath() == "/controller/rightStick/y")
 	{ 
 		// writing to the vertical servo the position it should be at
-		vertical.write(data.intData() + 90);
+		vertical.setPeriodHertz(50);
+		vertical.write(data.intData());
 		Serial.printf("Servo at pos %d, %d\n", horizontal.read(), vertical.read());
 	}
 

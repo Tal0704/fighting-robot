@@ -2,6 +2,8 @@
 #include <inc.h>
 #include <math.h>
 #include <MotorPins.h>
+#include <mutex>
+#include <analogWrite.h>
 
 // motors[0] = Upper right
 // motors[1] = Lower right
@@ -15,15 +17,13 @@ class Wheel
 {
 private:
 	MotorPins m_motor;
-	unsigned int m_enable;
+	pin m_enable;
 
 public:
 	Wheel();
 	Wheel(pin forwards, pin backwards, pin enable);
 
-	void stop() const;
 	void forwards() const;
 	void backwards() const;
-	inline void enable() const { digitalWrite(this->m_enable, HIGH); }
-	inline void disable() const { digitalWrite(this->m_enable, LOW); }
+	void setPWM(const double precent) const;
 };

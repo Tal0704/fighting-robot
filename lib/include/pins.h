@@ -13,16 +13,18 @@ typedef uint8_t pin;
 #define SERVO_HOR 23
 #define SERVO_VER 19
  
-#define MOTOR_EN 0
+#define MOTOR_EN 4
  
-#define LEFT_TOP_WHEEL_FOR 25
-#define LEFT_TOP_WHEEL_BACK 26
+// Forwards = straight module
  
-#define RIGHT_TOP_WHEEL_FOR 27
-#define RIGHT_TOP_WHEEL_BACK 14
+#define LEFT_TOP_WHEEL_FOR 25 // IN 3
+#define LEFT_TOP_WHEEL_BACK 26 // IN 4
  
-#define LEFT_BOTTOM_WHEEL_FOR 32
-#define LEFT_BOTTOM_WHEEL_BACK 33
+#define RIGHT_TOP_WHEEL_FOR 27 // IN2
+#define RIGHT_TOP_WHEEL_BACK 14 // IN1
  
-#define RIGHT_BOTTOM_WHEEL_FOR 12
-#define RIGHT_BOTTOM_WHEEL_BACK 13
+#define LEFT_BOTTOM_WHEEL_FOR 32 // IN1
+#define LEFT_BOTTOM_WHEEL_BACK 33 // IN2
+ 
+#define RIGHT_BOTTOM_WHEEL_FOR 12 // IN 4
+#define RIGHT_BOTTOM_WHEEL_BACK 13 // IN 3
