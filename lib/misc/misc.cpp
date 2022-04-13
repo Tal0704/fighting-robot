@@ -30,6 +30,12 @@ void buzz(unsigned int delay_ms)
 	// Output '1' to BUZZER_PIN pin (stop makeing sound)
 	digitalWrite(BUZZER_PIN, HIGH);
 	delay(delay_ms);
+	// Output '0' to BUZZER_PIN pin (make sound)
+	digitalWrite(BUZZER_PIN, LOW);
+	delay(delay_ms);
+	// Output '1' to BUZZER_PIN pin (stop makeing sound)
+	digitalWrite(BUZZER_PIN, HIGH);
+	delay(delay_ms);
 }
  
 inline void moveWheels()

@@ -14,14 +14,14 @@ void setup()
 	laser::init();
 
 	// initializing firebase with wifi name, password and callback function
-	firebase::init("Meron-1", "0545668998", doGetFb);
+	firebase::init(WIFI_NAME_HOME, WIFI_PASS_HOME, doGetFb);
 	
 	// initializing servo
 	initServo();
 
 	pinMode(BUZZER_PIN, OUTPUT);
 
-	buzz(500);
+	buzz(250);
 }
 
 void loop()
