@@ -23,6 +23,7 @@ public:
 	Wheel();
 	Wheel(pin forwards, pin backwards, pin enable);
 
+	void stop() const;
 	void forwards() const;
 	void backwards() const;
 	void setPWM(const double precent) const;

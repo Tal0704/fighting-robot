@@ -1,5 +1,7 @@
 #include "misc.h"
 
+Servo horizontal, vertical;
+
 unsigned int getDistance()
 {
 	long duration;
@@ -37,19 +39,26 @@ void buzz(unsigned int delay_ms)
 	digitalWrite(BUZZER_PIN, HIGH);
 	delay(delay_ms);
 }
+
+static std::unordered_map<std::string, Wheel> wheels = {
+	{"lb", Wheel(LEFT_BOTTOM_WHEEL_FOR, LEFT_BOTTOM_WHEEL_BACK, MOTOR_EN)},
+	{"lt", Wheel(LEFT_TOP_WHEEL_FOR, LEFT_TOP_WHEEL_BACK, MOTOR_EN)},
+	{"rb", Wheel(RIGHT_BOTTOM_WHEEL_FOR, RIGHT_BOTTOM_WHEEL_BACK, MOTOR_EN)},
+	{"rt", Wheel(RIGHT_TOP_WHEEL_FOR, RIGHT_TOP_WHEEL_BACK, MOTOR_EN)}
+};
  
 inline void moveWheels()
 {
-	static std::unordered_map<std::string, Wheel> wheels = {
-		{"lb", Wheel(LEFT_BOTTOM_WHEEL_FOR, LEFT_BOTTOM_WHEEL_BACK, MOTOR_EN)},
-		{"lt", Wheel(LEFT_TOP_WHEEL_FOR, LEFT_TOP_WHEEL_BACK, MOTOR_EN)},
-		{"rb", Wheel(RIGHT_BOTTOM_WHEEL_FOR, RIGHT_BOTTOM_WHEEL_BACK, MOTOR_EN)},
-		{"rt", Wheel(RIGHT_TOP_WHEEL_FOR, RIGHT_TOP_WHEEL_BACK, MOTOR_EN)}
-	};
-
 	using namespace firebase::input;
 
+	wheels["lb"] = Wheel(LEFT_BOTTOM_WHEEL_FOR, LEFT_BOTTOM_WHEEL_BACK, MOTOR_EN);
+	wheels["lt"] = Wheel(LEFT_TOP_WHEEL_FOR, LEFT_TOP_WHEEL_BACK, MOTOR_EN);
+	wheels["rb"] = Wheel(RIGHT_BOTTOM_WHEEL_FOR, RIGHT_BOTTOM_WHEEL_BACK, MOTOR_EN);
+	wheels["rt"] = Wheel(RIGHT_TOP_WHEEL_FOR, RIGHT_TOP_WHEEL_BACK, MOTOR_EN);
+
 	wheels["lb"].setPWM(leftStick.strength);
+	horizontal.detach();
+	horizontal.detach();
 
 	// is the user pushing the stick
 	// Forwards
@@ -69,8 +78,6 @@ inline void moveWheels()
 		wheels["rt"].forwards();
 		wheels["lb"].backwards();
 		wheels["lt"].backwards();
-			
-		Serial.println("Left");
 	}
 	// Back
 	else if(leftStick.angle > 225 && leftStick.angle < 315)
@@ -79,8 +86,6 @@ inline void moveWheels()
 		{
 			pair.second.backwards();
 		}		
-		
-		Serial.println("Back");
 	}
 	// Right
 	else if(leftStick.angle > 315 || leftStick.angle < 45)
@@ -89,12 +94,8 @@ inline void moveWheels()
 		wheels["rt"].backwards();
 		wheels["lb"].forwards();
 		wheels["lt"].forwards();
-
-		Serial.println("Right");
 	}
 }
-
-Servo horizontal, vertical;
 
 void doGetFb(StreamData data)
 {
@@ -127,17 +128,23 @@ void doGetFb(StreamData data)
 	if(data.dataPath() == "/controller/rightStick/x")
 	{ 
 		// writing to the horizontal servo the position it should be at
+		horizontal.attach(SERVO_HOR, 500, 2400);
+		for(const auto& pair : wheels)
+			pair.second.stop();
 		horizontal.setPeriodHertz(50);
-		horizontal.write(data.intData());
-		Serial.printf("Servo at pos %d, %d\n", horizontal.read(), vertical.read());
+		horizontal.write(180 - data.intData());
+		// Serial.printf("Servo at pos %d, %d\n", horizontal.read(), vertical.read());
 	}
 	// if the path of the data is the y position of the right stick
 	if(data.dataPath() == "/controller/rightStick/y")
 	{ 
 		// writing to the vertical servo the position it should be at
+		vertical.attach(SERVO_VER, 500, 2400);
+		for(const auto& pair : wheels)
+			pair.second.stop();
 		vertical.setPeriodHertz(50);
-		vertical.write(data.intData());
-		Serial.printf("Servo at pos %d, %d\n", horizontal.read(), vertical.read());
+		vertical.write(180 - data.intData());
+		// Serial.printf("Servo at pos %d, %d\n", horizontal.read(), vertical.read());
 	}
 
 	// if the path of the data is the laser emitter
@@ -167,9 +174,9 @@ void initServo()
 	horizontal.attach(SERVO_HOR, 500, 2400);
 	horizontal.write(90);
 
-	vertical.setPeriodHertz(50);
+	vertical.setPeriodHertz(50000);
 	vertical.attach(SERVO_VER, 500, 2400);
 	vertical.write(90);
 
-	Serial.print("Finished initializing servo\n");
+	Serial.print("Finished initializing servo!\n");
 }

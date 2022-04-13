@@ -1,6 +1,6 @@
 #include "Wheel.h"
 
-// std::once_flag initFrequencyWheels;
+std::once_flag initFrequencyWheels;
 
 // Constructor:
 //  when the object is first initialized
@@ -20,9 +20,10 @@ Wheel::Wheel(pin forwards, pin backwards, pin enable)
 	pinMode(this->m_motor.forwards, OUTPUT);
 	pinMode(this->m_motor.backwards, OUTPUT);
 
-	// std::call_once(initFrequencyWheels, [&](){
-	// 	analogWriteFrequency(MOTOR_EN, 10e3);
-	// });
+	std::call_once(initFrequencyWheels, [&]() {
+		ledcSetup(5, 5000, 8);
+		ledcAttachPin(MOTOR_EN, 5);
+	});
 }
 
 Wheel::Wheel()
@@ -48,6 +49,20 @@ void Wheel::backwards() const
 
 void Wheel::setPWM(double precent) const
 {
-	precent = precent * 2.5;
-	analogWrite(this->m_enable, precent);
+	#define DC precent * 2.5
+
+	ledcSetup(5, 5e3, 8);
+	ledcWrite(5, DC);
+	#if false
+	Serial.print("D.C for wheels is: ");
+	Serial.println(ledcRead(5));
+	Serial.print("Frequeny for wheels is: ");
+	Serial.println(ledcReadFreq(5));
+	#endif
+}
+
+void Wheel::stop() const
+{
+	digitalWrite(this->m_motor.backwards, LOW);
+	digitalWrite(this->m_motor.forwards, LOW);
 }
