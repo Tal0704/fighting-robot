@@ -58,7 +58,7 @@ inline void moveWheels()
 
 	wheels["lb"].setPWM(leftStick.strength);
 	horizontal.detach();
-	horizontal.detach();
+	vertical.detach();
 
 	// is the user pushing the stick
 	// Forwards
@@ -126,7 +126,10 @@ void doGetFb(StreamData data)
 		 
 	// if the path of the data is the x position of the right stick
 	if(data.dataPath() == "/controller/rightStick/x")
-	{ 
+	{
+		#if !false
+		vertical.detach();
+		#endif
 		// writing to the horizontal servo the position it should be at
 		horizontal.attach(SERVO_HOR, 500, 2400);
 		for(const auto& pair : wheels)
@@ -137,7 +140,10 @@ void doGetFb(StreamData data)
 	}
 	// if the path of the data is the y position of the right stick
 	if(data.dataPath() == "/controller/rightStick/y")
-	{ 
+	{
+		#if !false
+		horizontal.detach();
+		#endif
 		// writing to the vertical servo the position it should be at
 		vertical.attach(SERVO_VER, 500, 2400);
 		for(const auto& pair : wheels)

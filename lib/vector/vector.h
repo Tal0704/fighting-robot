@@ -7,7 +7,7 @@ union Vector
 		int angle, strength;
 	};
 
-	struct 
+	struct
 	{
 		int x, y;
 	};

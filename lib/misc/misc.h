@@ -9,13 +9,11 @@
 #include <laser.h>
 #include <Wheel.h>
 #include <unordered_map>
- 
+
 unsigned int getDistance();
 
 // Active low
 void buzz(unsigned int delay_ms);
-
-Vector convertPolarToCartezian(const Vector &vect);
 
 void doGetFb(StreamData data);
 
